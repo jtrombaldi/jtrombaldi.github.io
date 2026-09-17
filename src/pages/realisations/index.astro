@@ -32,6 +32,9 @@ const realisations = (await getCollection('realisations')).sort((a, b) => a.data
   </section>
 
   <script>
+    import gsap from 'gsap';
+    import { Flip } from 'gsap/Flip';
+    gsap.registerPlugin(Flip);
     // Filtres cumulables. L'état vit dans l'URL (?comp=C2&ctx=pro) : partageable, bouton retour fonctionnel,
     // et la page Compétences peut deep-linker directement.
     const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
@@ -40,13 +43,27 @@ const realisations = (await getCollection('realisations')).sort((a, b) => a.data
     const vide = document.getElementById('vide');
     const state = { comp: '', ctx: '' };
 
-    function apply(push = true) {
+    function apply(push = true, anim = true) {
+      // Transition animée (Flip) uniquement si les animations sont autorisées (html.gsap posé par motion.ts)
+      const animate = anim && document.documentElement.classList.contains('gsap');
+      const before = animate ? Flip.getState(cards) : null;
       let n = 0;
       for (const c of cards) {
         const okComp = !state.comp || (c.dataset.comp ?? '').split(' ').includes(state.comp);
         const okCtx = !state.ctx || c.dataset.ctx === state.ctx;
         const show = okComp && okCtx;
-        c.hidden = !show; if (show) n++;
+        c.classList.toggle('is-hidden', !show); if (show) n++;
+      }
+      if (before) {
+        // Toute carte affichée est forcée visible : le reveal initial (autoAlpha 0 / visibility hidden) peut
+        // être encore en attente, et Flip ne détecte l'entrée que si l'élément est réellement visible « après ».
+        const shown = cards.filter(c => !c.classList.contains('is-hidden'));
+        gsap.killTweensOf(shown); gsap.set(shown, { autoAlpha: 1, y: 0 });
+        Flip.from(before, {
+          duration: 0.55, ease: 'power2.inOut', stagger: 0.03, absolute: true, nested: true,
+          onEnter: (els) => gsap.fromTo(els, { autoAlpha: 0, scale: 0.92, y: 0 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'power2.out', stagger: 0.04 }),
+          onLeave: (els) => gsap.to(els, { autoAlpha: 0, scale: 0.92, duration: 0.3, ease: 'power2.in' }),
+        });
       }
       if (count) count.textContent = String(n);
       if (vide) vide.hidden = n > 0;
@@ -62,17 +79,17 @@ const realisations = (await getCollection('realisations')).sort((a, b) => a.data
         history.pushState(null, '', q ? `?${q}` : location.pathname);
       }
     }
-    function fromUrl() {
+    function fromUrl(anim = false) {
       const p = new URLSearchParams(location.search);
       state.comp = p.get('comp') ?? ''; state.ctx = p.get('ctx') ?? '';
-      apply(false);
+      apply(false, anim);
     }
     for (const ch of chips) ch.addEventListener('click', () => {
       const k = ch.dataset.filter as 'comp' | 'ctx';
       state[k] = ch.dataset.value ?? ''; apply();
     });
     document.querySelector('[data-reset]')?.addEventListener('click', e => { e.preventDefault(); state.comp = ''; state.ctx = ''; apply(); });
-    window.addEventListener('popstate', fromUrl);
-    fromUrl();
+    window.addEventListener('popstate', () => fromUrl(true));
+    fromUrl(); // état initial (deep-link) sans animation
   </script>
 </Base>

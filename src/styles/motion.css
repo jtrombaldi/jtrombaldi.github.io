@@ -60,37 +60,11 @@ html[data-motion="off"] [data-reveal] { opacity: 1 !important; transform: none !
 @keyframes pkt-trail { 0% { offset-distance: 0%; opacity: 0; } 8% { opacity: .35; } 92% { opacity: .35; } 100% { offset-distance: 100%; opacity: 0; } }
 
 /* ---------- 4. micro-icônes des compétences ---------- */
-.cicon { width: 28px; height: 28px; color: var(--accent-text); flex: 0 0 auto; }
+/* Les boucles de repos ET les réactions au survol sont pilotées par GSAP (motion.ts) :
+   une seule source de vérité, aucun conflit CSS/JS. Sans GSAP : icône statique. */
+.cicon { width: 28px; height: 28px; color: var(--accent-text); flex: 0 0 auto; overflow: visible; }
 .cicon * { transform-box: fill-box; transform-origin: center; }
-/* C1 patrimoine : LEDs qui clignotent */
-.cicon--c1 .led { animation: led 2.4s steps(1) infinite; }
-.cicon--c1 .led:nth-child(2) { animation-delay: .8s; }
-.cicon--c1 .led:nth-child(3) { animation-delay: 1.6s; }
-@keyframes led { 0%, 60% { opacity: 1; } 61%, 100% { opacity: .25; } }
-/* C2 incidents : clé qui s'oriente au survol */
-.cicon--c2 { transition: transform var(--dur-base) var(--ease); }
-.card:hover .cicon--c2 { transform: rotate(-20deg); }
-/* C3 présence en ligne : méridien qui tourne lentement */
-.cicon--c3 .meridian { animation: meridian 6s ease-in-out infinite; }
-@keyframes meridian { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(.15); } }
-/* C4 mode projet : barres qui progressent */
-.cicon--c4 .bar { transform-origin: left center; animation: bar 3.6s var(--ease) infinite; }
-.cicon--c4 .bar:nth-child(2) { animation-delay: .4s; }
-.cicon--c4 .bar:nth-child(3) { animation-delay: .8s; }
-@keyframes bar { 0% { transform: scaleX(.35); } 45%, 70% { transform: scaleX(1); } 100% { transform: scaleX(.35); } }
-/* C5 mise à disposition : flèche qui s'élève au survol, respiration au repos */
-.cicon--c5 .arrow { animation: lift 3s ease-in-out infinite; }
-@keyframes lift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
-.card:hover .cicon--c5 .arrow { animation: lift 1s ease-in-out infinite; }
-/* C6 développement pro : ondes RSS qui pulsent en séquence */
-.cicon--c6 .wave { animation: wave 2.4s ease-in-out infinite; opacity: .35; }
-.cicon--c6 .wave:nth-child(2) { animation-delay: .4s; }
-.cicon--c6 .wave:nth-child(3) { animation-delay: .8s; }
-@keyframes wave { 0%, 100% { opacity: .35; } 30% { opacity: 1; } }
-
-/* tracé du trait au survol de la carte (pathLength=1 sur chaque forme) */
-.card:hover .cicon [pathLength] { stroke-dasharray: 1; animation: draw .9s var(--ease) both; }
-@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.cicon .led { opacity: 1; }
 
 /* ---------- 5. flux d'informations (Veille) ---------- */
 .flux { display: block; width: 100%; height: auto; margin: var(--sp-4) 0 var(--sp-2); }
@@ -108,6 +82,9 @@ html[data-motion="off"] [data-reveal] { opacity: 1 !important; transform: none !
 .flux text.strong { fill: var(--fg); font-weight: 600; }
 .flux text.tiny { font-size: 9px; letter-spacing: .12em; }
 @media (max-width: 639px) { .flux text { font-size: 13px; } .flux text.tiny { font-size: 11px; } }
+
+/* ---------- filtres : sortie/entrée animées par Flip ---------- */
+.card.is-hidden { display: none; }
 
 /* ---------- 6. interactions niveau 2 ---------- */
 /* cartes : halo qui suit le curseur (--mx/--my posés par motion.ts), ombre colorée, flèche */

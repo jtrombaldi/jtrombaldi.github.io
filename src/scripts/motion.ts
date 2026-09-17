@@ -21,10 +21,13 @@ if (!off) {
     gsap.set(reveals, { autoAlpha: 0, y: 24 });
     ScrollTrigger.batch(reveals, {
       start: 'top 92%', once: true,
-      onEnter: (els) => gsap.to(els, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.08, overwrite: true }),
+      onEnter: (els) => gsap.to(els, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.08 }),
     });
-    // Sécurité : tout visible après 2 s quoi qu'il arrive (onglet caché, observer capricieux…)
-    setTimeout(() => gsap.to(reveals, { autoAlpha: 1, y: 0, duration: 0.4, overwrite: 'auto' }), 2000);
+    // Sécurité : après 2,5 s, tout élément encore invisible ET non animé par ailleurs est affiché.
+    // (jamais d'écrasement d'un tween en cours : sinon course avec Flip/onEnter → opacité bloquée à mi-chemin)
+    setTimeout(() => reveals.forEach((el) => {
+      if (getComputedStyle(el).display !== 'none' && Number(gsap.getProperty(el, 'opacity')) < 1 && !gsap.isTweening(el)) gsap.set(el, { autoAlpha: 1, y: 0 });
+    }), 2500);
   }
   root.classList.add('reveal-ready');
 
@@ -65,6 +68,52 @@ if (!off) {
   // Halo des nœuds : respiration décalée
   gsap.utils.toArray<SVGElement>('.hero__net .glow').forEach((g, i) =>
     gsap.to(g, { opacity: 0.9, scale: 1.6, transformOrigin: 'center', duration: 2.2, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: i * 0.35 }));
+
+  // ---------- 3b. Micro-icônes des compétences : boucle de repos permanente + réaction au survol ----------
+  // Chaque icône a une timeline infinie (repos). Au survol de la carte : elle accélère (×3.5),
+  // le trait se redessine, et une réaction propre se joue. Au retour : ralentit en douceur.
+  const iconIdle = (svg: SVGElement): gsap.core.Timeline => {
+    const tl = gsap.timeline({ repeat: -1 });
+    const q = (sel: string) => gsap.utils.toArray<SVGElement>(sel, svg);
+    if (svg.classList.contains('cicon--c1')) {           // baie : LEDs qui clignotent en séquence
+      q('.led').forEach((l, i) => tl.to(l, { opacity: 0.15, duration: 0.5, ease: 'steps(1)', yoyo: true, repeat: 1 }, i * 0.55));
+      tl.to({}, { duration: 0.6 });
+    } else if (svg.classList.contains('cicon--c2')) {    // clé : oscillation lente
+      tl.to(svg, { rotation: -12, duration: 1.3, ease: 'sine.inOut', yoyo: true, repeat: 1, transformOrigin: '50% 50%' });
+    } else if (svg.classList.contains('cicon--c3')) {    // globe : le méridien tourne
+      tl.to(q('.meridian'), { scaleX: 0.12, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: 1 });
+    } else if (svg.classList.contains('cicon--c4')) {    // liste : barres qui progressent
+      q('.bar').forEach((b, i) => tl.fromTo(b, { scaleX: 0.3, transformOrigin: 'left center' }, { scaleX: 1, duration: 0.9, ease: 'power2.out' }, i * 0.25));
+      tl.to({}, { duration: 1.2 }).to(q('.bar'), { scaleX: 0.3, duration: 0.5, ease: 'power2.in', stagger: 0.1 });
+    } else if (svg.classList.contains('cicon--c5')) {    // upload : la flèche respire
+      tl.to(q('.arrow'), { y: -2.5, duration: 1.1, ease: 'sine.inOut', yoyo: true, repeat: 1 });
+    } else if (svg.classList.contains('cicon--c6')) {    // wifi/RSS : ondes en séquence
+      const w = q('.wave'); gsap.set(w, { opacity: 0.3 });
+      w.forEach((el, i) => tl.to(el, { opacity: 1, duration: 0.35, yoyo: true, repeat: 1, ease: 'sine.inOut' }, i * 0.3));
+      tl.to({}, { duration: 0.9 });
+    }
+    return tl;
+  };
+  const iconBurst = (svg: SVGElement) => {                 // réaction propre à chaque icône, jouée à chaque survol
+    const q = (sel: string) => gsap.utils.toArray<SVGElement>(sel, svg);
+    if (svg.classList.contains('cicon--c1')) gsap.fromTo(q('.led'), { opacity: 1 }, { opacity: 0.15, duration: 0.09, repeat: 7, yoyo: true, stagger: 0.04 });
+    if (svg.classList.contains('cicon--c2')) gsap.fromTo(svg, { rotation: -25 }, { rotation: 0, duration: 0.9, ease: 'elastic.out(1, 0.35)', transformOrigin: '50% 50%' });
+    if (svg.classList.contains('cicon--c3')) gsap.fromTo(svg, { scale: 0.85 }, { scale: 1, duration: 0.7, ease: 'elastic.out(1, 0.4)', transformOrigin: '50% 50%' });
+    if (svg.classList.contains('cicon--c4')) gsap.fromTo(q('.bar'), { scaleX: 0, transformOrigin: 'left center' }, { scaleX: 1, duration: 0.5, ease: 'power3.out', stagger: 0.08 });
+    if (svg.classList.contains('cicon--c5')) gsap.fromTo(q('.arrow'), { y: 4 }, { y: -3, duration: 0.55, ease: 'back.out(2.5)' });
+    if (svg.classList.contains('cicon--c6')) gsap.fromTo(q('.wave'), { opacity: 0, scale: 0.7, transformOrigin: 'left bottom' }, { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2)', stagger: 0.09 });
+  };
+  gsap.utils.toArray<SVGElement>('.cicon').forEach((svg) => {
+    const idle = iconIdle(svg);
+    const host = svg.closest<HTMLElement>('.card') ?? svg;
+    const shapes = gsap.utils.toArray<SVGElement>('[pathLength]', svg);
+    host.addEventListener('pointerenter', () => {
+      gsap.to(idle, { timeScale: 3.5, duration: 0.3 });
+      gsap.fromTo(shapes, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.out', stagger: 0.05, clearProps: 'strokeDasharray,strokeDashoffset' });
+      iconBurst(svg);
+    });
+    host.addEventListener('pointerleave', () => gsap.to(idle, { timeScale: 1, duration: 0.8 }));
+  });
 
   // ---------- 4. Compteur (Compétences : « 5/6 ») ----------
   document.querySelectorAll<HTMLElement>('[data-count-to]').forEach((el) => {

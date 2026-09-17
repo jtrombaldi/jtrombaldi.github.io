@@ -1,9 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// `site` sera remplacé par l'URL définitive (domaine) avant la mise en ligne.
+// URL publique. À remplacer par le domaine personnalisé quand il sera acheté.
 export default defineConfig({
-  site: 'https://portfolio.example',
+  site: 'https://jtrombaldi.github.io',
   trailingSlash: 'never',
   build: { format: 'file' },
 });

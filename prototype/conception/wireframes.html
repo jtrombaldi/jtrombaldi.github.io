@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wireframes — Portfolio E5</title>
+<style>
+  :root{
+    --ink:#1c1f24; --ink2:#5b6472; --ink3:#8c95a3;
+    --pg:#f4f5f7; --frame:#ffffff; --line:#c9cfd8; --line2:#e3e7ec;
+    --fill:#e8ebef; --fill2:#dde2e8; --dark:#2f3640;
+    --note:#0b6b5f; --noteBg:#e4f5f1;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--pg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;padding:30px 18px 70px}
+  .wrap{max-width:1180px;margin:0 auto}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.02em}
+  .sub{color:var(--ink2);font-size:14px;margin:0 0 20px}
+  .warn{background:#fff6e0;border:1px solid #e8c37a;border-radius:10px;
+    padding:11px 14px;font-size:13px;color:#7a5a12;margin-bottom:24px}
+
+  .principles{background:var(--frame);border:1px solid var(--line2);border-radius:12px;
+    padding:16px 18px;margin-bottom:34px}
+  .principles h3{margin:0 0 10px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+  .principles ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink2)}
+  .principles li{margin-bottom:5px}
+  .principles b{color:var(--ink)}
+
+  h2{font-size:15px;margin:44px 0 3px;letter-spacing:-.01em}
+  h2 .tag{font-size:10px;font-weight:700;letter-spacing:.1em;color:#fff;background:var(--dark);
+    padding:3px 7px;border-radius:5px;vertical-align:middle;margin-right:8px}
+  .goal{font-size:13px;color:var(--ink2);margin:0 0 14px}
+
+  .row{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+  .col{flex:1;min-width:0}
+
+  /* ---- wireframe frame ---- */
+  .wf{background:var(--frame);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .wf-bar{background:var(--fill);border-bottom:1px solid var(--line);
+    padding:6px 10px;display:flex;align-items:center;gap:6px}
+  .wf-bar i{width:8px;height:8px;border-radius:50%;background:var(--line);display:inline-block}
+  .wf-bar span{font-size:10px;color:var(--ink3);margin-left:8px;font-family:ui-monospace,Menlo,monospace}
+  .wf-body{padding:14px}
+  .mob{max-width:270px;flex:0 0 270px}
+  @media(max-width:860px){.mob{flex:1 1 100%;max-width:100%}}
+
+  /* ---- nav mock ---- */
+  .nav{display:flex;align-items:center;gap:6px;border:1px solid var(--line);
+    border-radius:6px;padding:8px 10px;background:var(--fill);margin-bottom:12px;flex-wrap:wrap}
+  .nav .lg{font-size:11px;font-weight:700;margin-right:auto}
+  .nav .lk{font-size:10px;color:var(--ink2);padding:3px 6px}
+  .nav .cta{font-size:10px;font-weight:700;color:#fff;background:var(--dark);
+    padding:5px 9px;border-radius:5px}
+  .burger{margin-left:auto;font-size:14px;color:var(--ink2)}
+
+  /* ---- generic blocks ---- */
+  .box{border:1px solid var(--line);border-radius:6px;background:var(--fill);
+    padding:10px;margin-bottom:10px}
+  .box.d{border-style:dashed;background:transparent}
+  .lbl{font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ink2);
+    text-transform:uppercase;margin-bottom:6px}
+  .ln{height:7px;background:var(--fill2);border-radius:3px;margin-bottom:5px}
+  .ln.s{width:45%} .ln.m{width:70%} .ln.l{width:88%}
+  .h-ln{height:13px;background:#cdd3db;border-radius:3px;width:58%;margin-bottom:8px}
+  .btn{display:inline-block;font-size:10px;font-weight:700;padding:6px 10px;
+    border-radius:5px;background:var(--dark);color:#fff}
+  .btn.o{background:transparent;color:var(--ink2);border:1px solid var(--line)}
+  .grid{display:grid;gap:8px}
+  .g2{grid-template-columns:1fr 1fr} .g3{grid-template-columns:repeat(3,1fr)}
+  .g6{grid-template-columns:repeat(3,1fr)}
+  .chip{display:inline-block;font-size:9px;font-weight:700;padding:3px 7px;
+    border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink2);margin:0 3px 3px 0}
+  .chip.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+  .card{border:1px solid var(--line);border-radius:6px;padding:9px;background:#fff}
+  .card.ph{border-style:dashed;background:transparent;opacity:.7}
+  .mini{font-size:9px;color:var(--ink3);margin-top:4px}
+  .schema{border:1px dashed var(--line);border-radius:6px;background:repeating-linear-gradient(
+    45deg,transparent,transparent 6px,var(--line2) 6px,var(--line2) 7px);
+    height:78px;display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:700;color:var(--ink2);margin-bottom:10px}
+  table.wft{width:100%;border-collapse:collapse;font-size:9px}
+  table.wft th,table.wft td{border:1px solid var(--line);padding:4px 5px;text-align:left;color:var(--ink2)}
+  table.wft th{background:var(--fill);font-weight:700}
+  .scrollhint{font-size:9px;color:var(--ink3);text-align:right;margin-top:3px}
+
+  /* ---- callouts ---- */
+  .notes{margin-top:12px;background:var(--noteBg);border:1px solid #a9ded3;
+    border-radius:8px;padding:11px 14px}
+  .notes ol{margin:0;padding-left:18px;font-size:12px;color:#134e45}
+  .notes li{margin-bottom:4px}
+  .notes b{color:#07352f}
+  .cn{display:inline-block;min-width:16px;height:16px;line-height:16px;text-align:center;
+    background:var(--note);color:#fff;border-radius:50%;font-size:9px;font-weight:700;
+    margin-right:5px;vertical-align:1px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Wireframes basse fidélité</h1>
+<p class="sub">Portfolio E5 · BTS SIO SISR — Étape 2 · 7 écrans (6 pages + gabarit de fiche)</p>
+
+<div class="warn">
+  ⚠️ <b>Volontairement en niveaux de gris.</b> Un wireframe sert à valider la <b>structure et la hiérarchie</b>,
+  pas les couleurs. La direction artistique (palette, typo, identité) vient à l'Étape 3, avec ta validation.
+</div>
+
+<div class="principles">
+  <h3>Règles appliquées (issues de UI UX Pro Max + brief)</h3>
+  <ul>
+    <li><b>Style retenu :</b> Minimalism &amp; Swiss Style — grille stricte, typo forte, beaucoup de blanc. <i>Motion-Driven écarté</i> (incompatible sobriété + animations minimales).</li>
+    <li><b>Nav sticky</b> avec compensation de hauteur (le contenu ne passe jamais sous la barre).</li>
+    <li><b>Fil d'Ariane compact fusionné avec le retour</b> (« Réalisations › R1 ») — un seul élément, deux fonctions. + précédent/suivant.</li>
+    <li><b>Deep linking</b> : les filtres écrivent dans l'URL (<code>?comp=C2&amp;ctx=pro</code>) — partageable, bouton retour fonctionnel.</li>
+    <li><b>Chips de filtre</b> : passage à la ligne autorisé, jamais de rognage ni de rangée clippée.</li>
+    <li><b>Tableaux larges</b> : wrapper à scroll horizontal sur mobile, jamais de débordement de page.</li>
+    <li><b>Hiérarchie de titres</b> h1→h2→h3 séquentielle (lecteurs d'écran) · corps ≥ 16px · contraste AA.</li>
+    <li><b>Cibles tactiles</b> ≥ 44×44px, espacées de 8px+ (le jury peut être sur tablette).</li>
+  </ul>
+</div>
+
+<!-- ================= 1. ACCUEIL ================= -->
+<h2><span class="tag">PAGE 1</span>Accueil</h2>
+<p class="goal">Objectif : qui / quelle option / comment naviguer — en 30 secondes.</p>
+<div class="row">
+  <div class="col">
+    <div class="wf">
+      <div class="wf-bar"><i></i><i></i><i></i><span>/</span></div>
+      <div class="wf-body">
+        <div class="nav">
+          <span class="lg">JT.ROMBALDI</span>
+          <span class="lk">Accueil</span><span class="lk">Parcours</span><span class="lk">Compétences</span>
+          <span class="lk">Réalisations</span><span class="lk">Veille</span>
+          <span class="cta">▤ Tableau de synthèse</span>
+        </div>
+        <div class="box" style="padding:18px">
+          <div class="lbl">Hero — identité</div>
+          <div class="h-ln" style="width:52%;height:18px"></div>
+          <div class="ln m"></div>
+          <div class="ln" style="width:62%"></div>
+          <div class="mini" style="margin:8px 0 10px">Nom · BTS SIO — option SISR · Année · Établissement + IPKONEKT · phrase d'accroche (1 ligne)</div>
+          <span class="btn">▤ Voir le tableau de synthèse</span>
+          <span class="btn o">Voir les réalisations</span>
+        </div>
+        <div class="grid g3">
+          <div class="card"><div class="lbl">Accès rapide</div><div class="ln l"></div><div class="ln s"></div></div>
+          <div class="card"><div class="lbl">Accès rapide</div><div class="ln l"></div><div class="ln s"></div></div>
+          <div class="card"><div class="lbl">Accès rapide</div><div class="ln l"></div><div class="ln s"></div></div>
+        </div>
+        <div class="box d" style="margin-top:10px"><div class="lbl">Zone animation de fond (discrète, optionnelle)</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="col mob">
+    <div class="wf">
+      <div class="wf-bar"><i></i><span>mobile 375px</span></div>
+      <div class="wf-body">
+        <div class="nav"><span class="lg">JT.R</span><span class="burger">☰</span></div>
+        <div class="box" style="padding:14px">
+          <div class="h-ln" style="width:80%"></div>
+          <div class="ln l"></div><div class="ln m"></div>
+          <div style="margin-top:9px"><span class="btn" style="display:block;text-align:center;margin-bottom:6px">▤ Tableau de synthèse</span>
+          <span class="btn o" style="display:block;text-align:center">Réalisations</span></div>
+        </div>
+        <div class="card" style="margin-bottom:7px"><div class="ln l"></div><div class="ln s"></div></div>
+        <div class="card" style="margin-bottom:7px"><div class="ln l"></div><div class="ln s"></div></div>
+        <div class="card"><div class="ln l"></div><div class="ln s"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="notes"><ol>
+  <li><b>Le bouton Tableau de synthèse apparaît deux fois</b> (nav + hero) — le jury le cherche en premier (§3, §8.2).</li>
+  <li><b>Pas de photo, pas de réseaux sociaux, pas de CV</b> — explicitement exclus (§3).</li>
+  <li>Sur mobile, les deux CTA passent en <b>pleine largeur empilée</b> pour rester ≥ 44px de haut.</li>
+  <li>L'animation de fond est dans un bloc <b>isolé et optionnel</b> : on peut la retirer sans toucher à la structure.</li>
+</ol></div>
+
+<!-- ================= 2. PARCOURS ================= -->
+<h2><span class="tag">PAGE 2</span>Parcours</h2>
+<p class="goal">Objectif : contextualiser le profil en 60 s. La page la plus courte du site.</p>
+<div class="wf">
+  <div class="wf-bar"><i></i><i></i><i></i><span>/parcours</span></div>
+  <div class="wf-body">
+    <div class="nav"><span class="lg">JT.ROMBALDI</span><span class="lk">Accueil</span><span class="lk">Parcours</span>
+      <span class="lk">Compétences</span><span class="lk">Réalisations</span><span class="lk">Veille</span><span class="cta">▤ Synthèse</span></div>
+    <div class="h-ln" style="width:26%"></div>
+    <div class="row" style="gap:12px">
+      <div class="col" style="flex:2">
+        <div class="box"><div class="lbl">1 · Formation actuelle</div><div class="ln l"></div><div class="ln m"></div></div>
+        <div class="box"><div class="lbl">2 · Expérience — IPKONEKT (alternance)</div>
+          <div class="mini" style="margin-bottom:6px">Entreprise · période · 3 bullets max</div>
+          <div class="ln l"></div><div class="ln m"></div><div class="ln" style="width:64%"></div></div>
+        <div class="box"><div class="lbl">3 · Projet professionnel (2-3 lignes)</div><div class="ln m"></div></div>
+      </div>
+      <div class="col">
+        <div class="box"><div class="lbl">4 · Environnement technologique</div>
+          <span class="chip">Réseau</span><span class="chip">Linux</span><span class="chip">Windows</span>
+          <span class="chip">Python</span><span class="chip">Téléphonie</span><span class="chip">VM</span>
+          <div class="mini">Liste courte — ancrage, pas un CV</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="notes"><ol>
+  <li>Une <b>colonne latérale</b> pour les technos évite de transformer la page en CV à rallonge.</li>
+  <li><b>Exclus</b> : bac, collège, loisirs, anecdotes (§3). Les acquis de 1<sup>re</sup> année tiennent en une phrase de contexte.</li>
+</ol></div>
+
+<!-- ================= 3. COMPETENCES ================= -->
+<h2><span class="tag">PAGE 3</span>Compétences E5</h2>
+<p class="goal">Objectif : prouver d'un coup d'œil que les 6 compétences sont couvertes.</p>
+<div class="wf">
+  <div class="wf-bar"><i></i><i></i><i></i><span>/competences</span></div>
+  <div class="wf-body">
+    <div class="nav"><span class="lg">JT.ROMBALDI</span><span class="lk">Accueil</span><span class="lk">Parcours</span>
+      <span class="lk">Compétences</span><span class="lk">Réalisations</span><span class="lk">Veille</span><span class="cta">▤ Synthèse</span></div>
+    <div class="h-ln" style="width:30%"></div>
+    <div class="box" style="background:#fff"><div class="lbl">Indicateur de couverture globale</div>
+      <div style="display:flex;gap:5px;align-items:center">
+        <span class="chip on">C1 ✓</span><span class="chip on">C2 ✓</span><span class="chip">C3 ⧗</span>
+        <span class="chip on">C4 ✓</span><span class="chip on">C5 ✓</span><span class="chip on">C6 ✓</span>
+        <span class="mini" style="margin:0 0 0 8px">5/6 couvertes — C3 en construction</span>
+      </div></div>
+    <div class="grid g6" style="margin-top:4px">
+      <div class="card"><div class="lbl">C1 — Patrimoine informatique</div>
+        <div class="ln l"></div><div class="mini">Maîtrise : <b>bonne</b></div>
+        <div style="margin-top:6px"><span class="chip">→ R1</span><span class="chip">→ R7</span></div></div>
+      <div class="card"><div class="lbl">C2 — Incidents & assistance</div>
+        <div class="ln l"></div><div class="mini">Maîtrise : <b>bonne</b></div>
+        <div style="margin-top:6px"><span class="chip">→ R1</span><span class="chip">→ R2</span><span class="chip">→ R3</span></div></div>
+      <div class="card ph"><div class="lbl">C3 — Présence en ligne</div>
+        <div class="ln l"></div><div class="mini">Maîtrise : <b>à construire</b></div>
+        <div style="margin-top:6px"><span class="chip">→ R8 ⧗</span></div></div>
+      <div class="card"><div class="lbl">C4 — Mode projet</div>
+        <div class="ln l"></div><div class="mini">Maîtrise : <b>partielle</b></div>
+        <div style="margin-top:6px"><span class="chip">→ R4</span></div></div>
+      <div class="card"><div class="lbl">C5 — Mise à disposition service</div>
+        <div class="ln l"></div><div class="mini">Maîtrise : <b>bonne</b></div>
+        <div style="margin-top:6px"><span class="chip">→ R1</span><span class="chip">→ R2</span><span class="chip">→ R4</span><span class="chip">→ R6</span></div></div>
+      <div class="card"><div class="lbl">C6 — Développement professionnel</div>
+        <div class="ln l"></div><div class="mini">Maîtrise : <b>bonne</b></div>
+        <div style="margin-top:6px"><span class="chip">→ R5</span><span class="chip">→ R6</span></div></div>
+    </div>
+  </div>
+</div>
+<div class="notes"><ol>
+  <li><b>Aucune barre de progression en %</b> — le brief les interdit (subjectives, non crédibles). Un mot honnête suffit : partielle / bonne / excellente.</li>
+  <li>Chaque puce <b>→ Rx est un lien</b> vers la page Réalisations pré-filtrée sur cette compétence.</li>
+  <li><b>C3 est affichée honnêtement comme non couverte</b> (carte en pointillés) plutôt que maquillée — le jury repère le maquillage.</li>
+</ol></div>
+
+<!-- ================= 4. REALISATIONS ================= -->
+<h2><span class="tag">PAGE 4 — HUB</span>Réalisations</h2>
+<p class="goal">Objectif : la page centrale. Combien de réalisations, quelles compétences, accès direct.</p>
+<div class="row">
+  <div class="col">
+    <div class="wf">
+      <div class="wf-bar"><i></i><i></i><i></i><span>/realisations?comp=C2&amp;ctx=pro</span></div>
+      <div class="wf-body">
+        <div class="nav"><span class="lg">JT.ROMBALDI</span><span class="lk">Accueil</span><span class="lk">Parcours</span>
+          <span class="lk">Compétences</span><span class="lk">Réalisations</span><span class="lk">Veille</span><span class="cta">▤ Synthèse</span></div>
+        <div class="h-ln" style="width:28%"></div>
+        <div class="box" style="background:#fff">
+          <div class="lbl">Filtres (se cumulent · écrivent dans l'URL)</div>
+          <div style="margin-bottom:6px"><span class="mini">Compétence :</span><br>
+            <span class="chip">Toutes</span><span class="chip">C1</span><span class="chip on">C2</span>
+            <span class="chip">C3</span><span class="chip">C4</span><span class="chip">C5</span><span class="chip">C6</span></div>
+          <div><span class="mini">Contexte :</span><br>
+            <span class="chip">Tous</span><span class="chip on">Professionnel</span><span class="chip">Personnel</span></div>
+          <div class="mini" style="margin-top:7px">↳ 3 réalisations affichées · <u>Réinitialiser</u></div>
+        </div>
+        <div class="grid g3">
+          <div class="card"><div class="lbl">R1</div><div class="ln l"></div><div class="ln m"></div>
+            <div style="margin-top:6px"><span class="chip">C1</span><span class="chip">C2</span><span class="chip">C5</span></div>
+            <div class="mini">PRO · IPKONEKT</div></div>
+          <div class="card"><div class="lbl">R2</div><div class="ln l"></div><div class="ln m"></div>
+            <div style="margin-top:6px"><span class="chip">C2</span><span class="chip">C5</span></div>
+            <div class="mini">PRO · IPKONEKT</div></div>
+          <div class="card"><div class="lbl">R3</div><div class="ln l"></div><div class="ln m"></div>
+            <div style="margin-top:6px"><span class="chip">C2</span></div>
+            <div class="mini">PRO · IPKONEKT</div></div>
+        </div>
+        <div class="mini" style="margin-top:10px;color:var(--ink3)">— hors filtre actif —</div>
+        <div class="grid g3" style="margin-top:6px;opacity:.45">
+          <div class="card"><div class="lbl">R4</div><div class="ln m"></div></div>
+          <div class="card"><div class="lbl">R5</div><div class="ln m"></div></div>
+          <div class="card"><div class="lbl">R6</div><div class="ln m"></div></div>
+        </div>
+        <div class="grid g3" style="margin-top:6px;opacity:.45">
+          <div class="card ph"><div class="lbl">R7 ⧗</div><div class="mini">À venir — homelab</div></div>
+          <div class="card ph"><div class="lbl">R8 ⧗</div><div class="mini">Option à choisir</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col mob">
+    <div class="wf">
+      <div class="wf-bar"><i></i><span>mobile 375px</span></div>
+      <div class="wf-body">
+        <div class="nav"><span class="lg">JT.R</span><span class="burger">☰</span></div>
+        <div class="box" style="background:#fff;padding:8px">
+          <div class="lbl">Filtres</div>
+          <span class="chip">Tous</span><span class="chip on">C2</span><span class="chip">C5</span>
+          <span class="chip">C1</span><span class="chip">C4</span>
+          <div class="mini">les chips passent à la ligne, jamais clippées</div>
+        </div>
+        <div class="card" style="margin-bottom:7px"><div class="lbl">R1</div><div class="ln l"></div>
+          <div style="margin-top:5px"><span class="chip">C1</span><span class="chip">C2</span></div></div>
+        <div class="card" style="margin-bottom:7px"><div class="lbl">R2</div><div class="ln l"></div>
+          <div style="margin-top:5px"><span class="chip">C2</span></div></div>
+        <div class="card"><div class="lbl">R3</div><div class="ln l"></div>
+          <div style="margin-top:5px"><span class="chip">C2</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="notes"><ol>
+  <li><b>Les filtres écrivent dans l'URL</b> → le jury peut revenir en arrière, et la page Compétences peut deep-linker directement (<code>?comp=C2</code>).</li>
+  <li><b>Une seule grille, pas de pagination ni de scroll infini</b> (interdit §8.8) — 8 réalisations tiennent sur un écran et demi.</li>
+  <li><b>R7/R8 restent visibles en pointillés</b> : honnête, et ça montre au jury que le plan est maîtrisé.</li>
+  <li>Sur mobile : <b>1 colonne</b>, chips qui passent à la ligne (jamais de rangée rognée).</li>
+</ol></div>
+
+<!-- ================= 5. FICHE ================= -->
+<h2><span class="tag">GABARIT</span>Fiche réalisation <span style="font-weight:400;font-size:12px;color:var(--ink2)">— réutilisé pour R1→R8</span></h2>
+<p class="goal">Objectif : le modèle en 12 rubriques du brief (§5). Sans captures : le schéma porte la preuve.</p>
+<div class="wf">
+  <div class="wf-bar"><i></i><i></i><i></i><span>/realisations/r1</span></div>
+  <div class="wf-body">
+    <div class="nav"><span class="lg">JT.ROMBALDI</span><span class="lk">Accueil</span><span class="lk">Parcours</span>
+      <span class="lk">Compétences</span><span class="lk">Réalisations</span><span class="lk">Veille</span><span class="cta">▤ Synthèse</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <span style="font-size:10px;color:var(--ink2)"><u>Réalisations</u> › <b style="color:var(--ink)">R1 — Réseau fibre + backup 4G</b></span>
+      <span><span class="btn o">← R précédente</span> <span class="btn o">R suivante →</span></span>
+    </div>
+    <div class="box" style="background:#fff">
+      <div class="lbl">EN-TÊTE [OBL]</div>
+      <div class="h-ln" style="width:62%"></div>
+      <div class="mini" style="margin-bottom:6px">Contexte : professionnel · Période : JJ/MM/AA → JJ/MM/AA</div>
+      <span class="chip on">C1</span><span class="chip on">C2</span><span class="chip on">C5</span>
+      <span class="mini">badges cliquables → page Compétences</span>
+      <div style="margin-top:8px"><span class="btn o">⎙ Imprimer / PDF</span></div>
+    </div>
+    <div class="row" style="gap:12px">
+      <div class="col" style="flex:2">
+        <div class="box"><div class="lbl">1 · Contexte [OBL] — 2-3 lignes</div><div class="ln l"></div><div class="ln m"></div></div>
+        <div class="box"><div class="lbl">2 · Besoin / problématique [OBL]</div><div class="ln l"></div><div class="ln m"></div></div>
+        <div class="box"><div class="lbl">3 · Objectifs [OBL] — bullets</div><div class="ln m"></div><div class="ln m"></div><div class="ln s"></div></div>
+        <div class="box" style="background:#fff">
+          <div class="lbl">5 · Architecture / schéma [OBL si réseau]</div>
+          <div class="schema">SCHÉMA RÉSEAU — porte la preuve à la place des captures</div>
+          <div class="mini">Légende obligatoire sous le schéma · IP génériques (192.168.x.x) · clients anonymisés</div>
+        </div>
+        <div class="box"><div class="lbl">6 · Étapes réalisées [OBL] — rubrique la plus importante</div>
+          <div class="ln l"></div><div class="ln l"></div><div class="ln m"></div>
+          <div class="mini">Ce que <b>moi</b> j'ai fait, dans l'ordre — pas ce que le projet fait</div></div>
+        <div class="grid g2">
+          <div class="box"><div class="lbl">7 · Difficultés [OBL]</div><div class="ln l"></div><div class="ln m"></div></div>
+          <div class="box"><div class="lbl">8 · Solutions [OBL]</div><div class="ln l"></div><div class="ln m"></div></div>
+        </div>
+        <div class="box"><div class="lbl">12 · Bilan personnel [OBL]</div><div class="ln l"></div><div class="ln m"></div>
+          <div class="mini">Appris / ferais différemment / maîtrise honnête</div></div>
+      </div>
+      <div class="col">
+        <div class="box" style="background:#fff"><div class="lbl">4 · Environnement technique [OBL]</div>
+          <span class="chip">Routeur</span><span class="chip">4G</span><span class="chip">VLAN</span>
+          <span class="chip">DHCP</span><span class="chip">SSH</span></div>
+        <div class="box" style="background:#fff"><div class="lbl">9 · Compétences mobilisées [OBL]</div>
+          <div class="mini" style="margin-bottom:4px"><b>C1</b> — une phrase concrète</div><div class="ln l"></div>
+          <div class="mini" style="margin:6px 0 4px"><b>C2</b> — une phrase concrète</div><div class="ln l"></div>
+          <div class="mini" style="margin:6px 0 4px"><b>C5</b> — une phrase concrète</div><div class="ln l"></div></div>
+        <div class="box d"><div class="lbl">11 · Documentation [OPT]</div><div class="mini">Lien README / procédure</div></div>
+        <div class="box d"><div class="lbl">10 · Preuves — RETIRÉ</div>
+          <div class="mini">Pas de captures (ta décision). Le schéma + les phrases de la rubrique 9 portent la preuve.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="notes"><ol>
+  <li><b>Les 12 rubriques du §5 sont toutes présentes</b>, réparties en 2 colonnes : le récit à gauche, les références à droite.</li>
+  <li><b>Le schéma est remonté très haut</b> et agrandi — sans captures, c'est lui qui porte la crédibilité devant un jury SISR.</li>
+  <li><b>« Réalisations › R1 »</b> : le mot « Réalisations » est le lien de retour — pas de bouton séparé. <b>Précédent / suivant</b> permet d'enchaîner R4 → R1 → R6 pendant l'oral.</li>
+  <li><b>Bouton Imprimer/PDF</b> par fiche (§9 souhaitable) — possible uniquement grâce aux pages dédiées.</li>
+</ol></div>
+
+<!-- ================= 6. VEILLE ================= -->
+<h2><span class="tag">PAGE 5</span>Veille technologique</h2>
+<p class="goal">Objectif : prouver C6. Rappel du brief : « la veille sans analyse personnelle vaut zéro ».</p>
+<div class="wf">
+  <div class="wf-bar"><i></i><i></i><i></i><span>/veille</span></div>
+  <div class="wf-body">
+    <div class="nav"><span class="lg">JT.ROMBALDI</span><span class="lk">Accueil</span><span class="lk">Parcours</span>
+      <span class="lk">Compétences</span><span class="lk">Réalisations</span><span class="lk">Veille</span><span class="cta">▤ Synthèse</span></div>
+    <div class="h-ln" style="width:30%"></div>
+    <div class="grid g3">
+      <div class="box"><div class="lbl">1 · Méthode</div><div class="ln l"></div><div class="mini">Feedly, RSS, fréquence, dossier « Veille IT »</div></div>
+      <div class="box"><div class="lbl">2 · Sources</div>
+        <span class="chip">ANSSI</span><span class="chip">IT-Connect</span><span class="chip">BleepingComputer</span>
+        <span class="chip">Next</span><span class="chip">The Register</span><span class="chip">Ars Technica</span></div>
+      <div class="box"><div class="lbl">3 · Thèmes surveillés</div>
+        <span class="chip">Cybersécurité</span><span class="chip">Linux</span><span class="chip">Réseau</span><span class="chip">CVE</span></div>
+    </div>
+    <div class="lbl" style="margin:14px 0 7px">4 · Fiches de veille personnelles (4 à 6)</div>
+    <div class="grid g2">
+      <div class="card"><div class="lbl">Fiche 01</div>
+        <div class="mini">Titre · source · date</div><div class="ln l"></div>
+        <div class="mini" style="margin-top:6px">Résumé (3-4 lignes)</div><div class="ln l"></div><div class="ln m"></div>
+        <div class="box" style="margin:7px 0 0;background:#fff;border-style:dashed">
+          <div class="lbl" style="color:var(--note)">★ Apport personnel — la partie qui compte</div>
+          <div class="ln l"></div><div class="ln m"></div></div></div>
+      <div class="card"><div class="lbl">Fiche 02</div>
+        <div class="mini">Titre · source · date</div><div class="ln l"></div>
+        <div class="mini" style="margin-top:6px">Résumé (3-4 lignes)</div><div class="ln l"></div><div class="ln m"></div>
+        <div class="box" style="margin:7px 0 0;background:#fff;border-style:dashed">
+          <div class="lbl" style="color:var(--note)">★ Apport personnel</div>
+          <div class="ln l"></div><div class="ln m"></div></div></div>
+    </div>
+  </div>
+</div>
+<div class="notes"><ol>
+  <li><b>L'« apport personnel » est encadré et visuellement dominant</b> dans chaque fiche — c'est le seul élément que le jury note vraiment.</li>
+  <li><b>Aucun flux RSS live</b> : le brief l'interdit (risque de bug pendant l'oral). Contenu statique uniquement.</li>
+</ol></div>
+
+<!-- ================= 7. SYNTHESE ================= -->
+<h2><span class="tag">PAGE 6</span>Tableau de synthèse <span style="font-weight:400;font-size:12px;color:var(--ink2)">— annexe VI-1, session 2026</span></h2>
+<p class="goal">Objectif : exigence officielle. Absent = −2 points.</p>
+<div class="row">
+  <div class="col">
+    <div class="wf">
+      <div class="wf-bar"><i></i><i></i><i></i><span>/synthese</span></div>
+      <div class="wf-body">
+        <div class="nav"><span class="lg">JT.ROMBALDI</span><span class="lk">Accueil</span><span class="lk">Parcours</span>
+          <span class="lk">Compétences</span><span class="lk">Réalisations</span><span class="lk">Veille</span><span class="cta">▤ Synthèse</span></div>
+        <div class="box" style="background:#fff">
+          <div class="lbl">En-tête officiel</div>
+          <table class="wft">
+            <tr><th>Centre de formation</th><td>—</td><th>N° candidat</th><td>—</td></tr>
+            <tr><th>NOM et prénom</th><td>ROMBALDI Jean-Toussaint</td><th>Option</th><td>☑ SISR ☐ SLAM</td></tr>
+            <tr><th>Adresse URL du portfolio</th><td colspan="3"><b>https://…</b> ← exigence du référentiel</td></tr>
+          </table>
+          <div style="margin-top:8px"><span class="btn">⬇ Télécharger le .xlsx officiel</span></div>
+        </div>
+        <div class="box" style="background:#fff">
+          <div class="lbl">Tableau — HTML natif, scroll horizontal si besoin</div>
+          <div style="overflow-x:auto">
+          <table class="wft">
+            <tr><th style="min-width:130px">Réalisations professionnelles<br>(intitulé + documents)</th>
+                <th>Période</th><th>C1</th><th>C2</th><th>C3</th><th>C4</th><th>C5</th><th>C6</th></tr>
+            <tr><td colspan="8" style="background:var(--fill);font-weight:700">Réalisations en milieu professionnel — 1<sup>re</sup> année</td></tr>
+            <tr><td style="color:var(--ink3)">⧗ à statuer (cf. note)</td><td>—</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td colspan="8" style="background:var(--fill);font-weight:700">Réalisations en milieu professionnel — 2<sup>e</sup> année</td></tr>
+            <tr><td><u>R1 — Réseau fibre + backup 4G</u> →</td><td>—</td><td>✓</td><td>✓</td><td></td><td></td><td>✓</td><td></td></tr>
+            <tr><td><u>R2 — Téléphonie Keyyo</u> →</td><td>—</td><td></td><td>✓</td><td></td><td></td><td>✓</td><td></td></tr>
+            <tr><td><u>R3 — Diagnostic incidents</u> →</td><td>—</td><td></td><td>✓</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td><u>R4 — Automatisation Animalis</u> →</td><td>—</td><td></td><td></td><td></td><td>✓</td><td>✓</td><td></td></tr>
+            <tr><td><u>R5 — Système de veille</u> →</td><td>—</td><td></td><td></td><td></td><td></td><td></td><td>✓</td></tr>
+            <tr><td><u>R6 — Dashboard Flask</u> →</td><td>—</td><td></td><td></td><td></td><td></td><td>✓</td><td>✓</td></tr>
+          </table></div>
+          <div class="scrollhint">↔ scroll horizontal sur petit écran</div>
+          <div class="mini" style="margin-top:6px">Chaque intitulé souligné est un <b>lien vers sa fiche</b> — le tableau devient une porte d'entrée.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col mob">
+    <div class="wf">
+      <div class="wf-bar"><i></i><span>mobile 375px</span></div>
+      <div class="wf-body">
+        <div class="nav"><span class="lg">JT.R</span><span class="burger">☰</span></div>
+        <div class="box" style="background:#fff;padding:8px">
+          <div class="lbl">En-tête</div><div class="ln l"></div><div class="ln m"></div>
+          <span class="btn" style="display:block;text-align:center;margin-top:7px">⬇ .xlsx</span></div>
+        <div class="box" style="background:#fff;padding:8px">
+          <div class="lbl">Tableau ↔</div>
+          <div style="border:1px dashed var(--line);padding:7px;border-radius:5px">
+            <div class="ln l"></div><div class="ln l"></div><div class="ln m"></div></div>
+          <div class="mini">wrapper overflow-x — la page ne déborde jamais</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="notes"><ol>
+  <li><b>Tableau en HTML natif</b>, pas une image ni une visionneuse Excel : responsive, accessible, imprimable, et impossible à « ne pas charger ».</li>
+  <li><b>L'URL du portfolio est mise en évidence</b> — exigence explicite du référentiel.</li>
+  <li><b>Les intitulés sont des liens vers les fiches</b> : le tableau officiel devient le meilleur point d'entrée du portfolio.</li>
+  <li><b>La section 1<sup>re</sup> année existe dans le modèle officiel</b> — à statuer selon les dates réelles de ton alternance (question de contenu, pas de design).</li>
+</ol></div>
+
+</div>
+</body>
+</html>

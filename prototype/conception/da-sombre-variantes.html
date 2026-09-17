@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DA sombre — 3 variantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#3a4150;color:#111;font-family:Inter,system-ui,sans-serif;padding:24px 14px 60px}
+  .top{max-width:1400px;margin:0 auto 18px;color:#fff}
+  .top h1{font-size:22px;margin:0 0 4px}
+  .top p{margin:0;font-size:13px;opacity:.9}
+  .cmp{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:1100px){.cmp{grid-template-columns:1fr}}
+
+  .t{border-radius:14px;overflow:hidden;font-family:var(--font-body);color:var(--fg);background:var(--bg);border:1px solid var(--border)}
+
+  /* ===== B1 — TERMINAL (baseline) ===== */
+  .b1{
+    --bg:#0F172A; --fg:#F8FAFC; --card:#1B2336; --muted:#272F42; --muted-fg:#94A3B8; --border:#3B4658;
+    --primary:#F8FAFC; --on-primary:#0F172A; --accent:#22C55E; --accent-text:#4ADE80; --on-accent:#0F172A; --accent-soft:#14301F;
+    --ok:#4ADE80; --font-body:"IBM Plex Sans",system-ui,sans-serif; --font-head:"JetBrains Mono",ui-monospace,monospace; --font-mono:"JetBrains Mono",ui-monospace,monospace;
+    --head-weight:700; --head-track:-.01em; --radius:10px;
+  }
+  /* ===== B2 — SIGNAL BLEU ===== */
+  .b2{
+    --bg:#020617; --fg:#F8FAFC; --card:#0E1223; --muted:#1A1E2F; --muted-fg:#94A3B8; --border:#283047;
+    --primary:#F8FAFC; --on-primary:#020617; --accent:#0EA5E9; --accent-text:#38BDF8; --on-accent:#020617; --accent-soft:#0B2A3A;
+    --ok:#4ADE80; --font-body:"Inter",system-ui,sans-serif; --font-head:"Inter",system-ui,sans-serif; --font-mono:"JetBrains Mono",ui-monospace,monospace;
+    --head-weight:700; --head-track:-.03em; --radius:8px;
+  }
+  /* ===== B3 — AMBRE / LED ===== */
+  .b3{
+    --bg:#0B0F14; --fg:#F1F5F9; --card:#131922; --muted:#1C2430; --muted-fg:#94A3B8; --border:#2A3441;
+    --primary:#F1F5F9; --on-primary:#0B0F14; --accent:#F59E0B; --accent-text:#FBBF24; --on-accent:#0B0F14; --accent-soft:#2E2210;
+    --ok:#4ADE80; --font-body:"Fira Sans",system-ui,sans-serif; --font-head:"Fira Code",ui-monospace,monospace; --font-mono:"Fira Code",ui-monospace,monospace;
+    --head-weight:600; --head-track:-.01em; --radius:6px;
+  }
+
+  .t-head{padding:13px 16px;border-bottom:1px solid var(--border)}
+  .t-head .name{font-weight:700;font-size:14px;display:block;font-family:var(--font-head)}
+  .t-head .meta{font-size:11px;color:var(--muted-fg);font-family:var(--font-mono);display:block;margin-top:3px}
+  .t-body{padding:14px}
+
+  .nav{display:flex;align-items:center;gap:2px;flex-wrap:wrap;background:var(--card);
+    border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;margin-bottom:12px}
+  .nav .lg{font-weight:800;margin-right:auto;font-size:13px;font-family:var(--font-head)}
+  .nav .lg em{color:var(--accent-text);font-style:normal}
+  .nav a{font-size:11px;color:var(--muted-fg);padding:5px 7px;border-radius:5px;text-decoration:none}
+  .nav a.on{color:var(--fg);background:var(--muted)}
+  .nav .cta{font-size:11px;font-weight:700;color:var(--on-accent);background:var(--accent);padding:7px 10px;border-radius:6px;text-decoration:none;margin-left:4px}
+
+  .hero{padding:20px 18px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;position:relative;overflow:hidden}
+  .hero>*{position:relative}
+  .hero .kicker{font-family:var(--font-mono);font-size:11px;color:var(--accent-text);letter-spacing:.06em;margin-bottom:7px}
+  .hero h2{margin:0 0 7px;font-size:25px;line-height:1.1;letter-spacing:var(--head-track);font-family:var(--font-head);font-weight:var(--head-weight)}
+  .hero p{margin:0 0 12px;font-size:14px;color:var(--muted-fg);line-height:1.5}
+  .btn{display:inline-block;font-size:12px;font-weight:700;padding:9px 13px;border-radius:calc(var(--radius) - 2px);text-decoration:none;margin:0 5px 5px 0}
+  .btn.p{background:var(--accent);color:var(--on-accent)}
+  .btn.s{background:transparent;color:var(--fg);border:1px solid var(--border)}
+  .grid-bg{position:absolute;inset:0;pointer-events:none;opacity:.45;
+    background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size:24px 24px;mask-image:radial-gradient(ellipse at 85% 15%,#000 0%,transparent 60%)}
+  /* B3 : LEDs au lieu de grille */
+  .b3 .grid-bg{background:none;opacity:1;mask-image:none}
+  .b3 .grid-bg::before{content:"";position:absolute;right:14px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 8px var(--accent),0 16px 0 -1px #4ADE80,0 16px 8px -1px #4ADE80,0 32px 0 -1px #2A3441}
+
+  .sec{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-fg);margin:14px 0 7px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+  .chip{font-size:11px;font-weight:600;padding:5px 9px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--muted-fg)}
+  .chip.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+  .b3 .chip{border-radius:4px}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;transition:transform .2s,border-color .2s}
+  .card:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .card .id{font-family:var(--font-mono);font-size:10px;color:var(--accent-text);font-weight:600}
+  .card h3{margin:3px 0 5px;font-size:14px;line-height:1.3;font-family:var(--font-head);font-weight:var(--head-weight)}
+  .card p{margin:0 0 8px;font-size:12px;color:var(--muted-fg);line-height:1.45}
+  .badge{display:inline-block;font-family:var(--font-mono);font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--accent-soft);color:var(--accent-text);margin-right:3px}
+  .ctx{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:var(--muted);color:var(--muted-fg);float:right}
+  .card.ph{border-style:dashed;opacity:.6}
+
+  .comp{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .comp div{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:8px;font-size:11px;line-height:1.35}
+  .comp b{display:block;font-family:var(--font-mono);color:var(--accent-text);margin-bottom:2px}
+  .comp .ok{color:var(--ok);font-weight:700}
+  .comp .todo{color:#F59E0B;font-weight:700}
+
+  .type{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+  .type .h1{font-family:var(--font-head);font-size:21px;font-weight:var(--head-weight);letter-spacing:var(--head-track);margin:0 0 2px}
+  .type .h2{font-family:var(--font-head);font-size:15px;font-weight:var(--head-weight);margin:0 0 5px}
+  .type .body{font-size:14px;line-height:1.55;margin:0 0 5px}
+  .type .mono{font-family:var(--font-mono);font-size:12px;color:var(--accent-text)}
+  .type small{display:block;font-size:10px;color:var(--muted-fg);margin-top:6px;font-family:var(--font-mono)}
+
+  .pal{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+  .sw{height:36px;border-radius:6px;border:1px solid var(--border)}
+
+  .verdict{margin:12px 0 0;padding:11px 12px;border-radius:var(--radius);background:var(--muted);font-size:12px;line-height:1.5}
+  .verdict b{color:var(--accent-text)}
+  .verdict .src{display:block;margin-top:6px;font-size:10px;color:var(--muted-fg);font-family:var(--font-mono)}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>Mode sombre — 3 variantes</h1>
+  <p>Même style (Minimalism &amp; Swiss), mêmes composants. Ce qui change : accent, typographie, profondeur du fond, arrondi. Contrastes AA vérifiés sur les trois.</p>
+</div>
+
+<div class="cmp">
+
+<!-- ===================== B1 ===================== -->
+<section class="t b1">
+  <div class="t-head"><span class="name">B1 · Terminal</span><span class="meta">Slate #0F172A · vert #22C55E · JetBrains Mono + IBM Plex Sans</span></div>
+  <div class="t-body">
+    <div class="nav"><span class="lg">JT<em>.</em>Rombaldi</span><a href="#">Accueil</a><a href="#">Parcours</a><a href="#">Compét.</a><a href="#" class="on">Réalis.</a><a href="#">Veille</a><a href="#" class="cta">▤ Synthèse</a></div>
+    <div class="hero"><div class="grid-bg"></div>
+      <div class="kicker">$ whoami — BTS SIO · SISR · 2025–2026</div>
+      <h2>Jean-Toussaint Rombaldi</h2>
+      <p>Alternant réseau &amp; téléphonie d'entreprise chez IPKONEKT. Je déploie, configure et dépanne des infrastructures fibre, 4G et VoIP.</p>
+      <a href="#" class="btn p">▤ Tableau de synthèse</a><a href="#" class="btn s">Réalisations</a>
+    </div>
+    <div class="sec">Filtres</div>
+    <div class="chips"><span class="chip">Toutes</span><span class="chip">C1</span><span class="chip on">C2</span><span class="chip">C5</span><span class="chip on">Pro</span><span class="chip">Perso</span></div>
+    <div class="card"><span class="ctx">PRO</span><div class="id">R1</div><h3>Réseau fibre + backup 4G</h3><p>Configuration de routeurs fibre et bascule 4G pour la continuité de service.</p><span class="badge">C1</span><span class="badge">C2</span><span class="badge">C5</span></div>
+    <div class="card ph"><span class="ctx">⧗ À VENIR</span><div class="id">R7</div><h3>Homelab Linux</h3><p>Matériel en cours d'acquisition.</p></div>
+    <div class="sec">Compétences</div>
+    <div class="comp"><div><b>C1</b>Patrimoine <span class="ok">✓ bonne</span></div><div><b>C2</b>Incidents <span class="ok">✓ bonne</span></div><div><b>C3</b>Présence <span class="todo">⧗</span></div></div>
+    <div class="sec">Typo</div>
+    <div class="type"><p class="h1">Titre — JetBrains Mono</p><p class="h2">Rubrique — Mono 700</p><p class="body">Corps 16px IBM Plex Sans. Le mono en titres donne l'identité console, le sans garde la lecture confortable.</p><p class="mono">192.168.10.1 · vlan 20</p><small>Ambiance : éditeur de code / CLI</small></div>
+    <div class="sec">Palette</div>
+    <div class="pal"><div class="sw" style="background:#0F172A"></div><div class="sw" style="background:#22C55E"></div><div class="sw" style="background:#1B2336"></div><div class="sw" style="background:#272F42"></div><div class="sw" style="background:#94A3B8"></div><div class="sw" style="background:#F8FAFC"></div></div>
+    <div class="verdict"><b>Lecture jury :</b> « développeur / admin sys ». Le vert = succès, run, OK. Très lisible, très répandu — donc un peu attendu.<span class="src">source : UI UX Pro Max · Developer Tool/IDE + Developer Mono</span></div>
+  </div>
+</section>
+
+<!-- ===================== B2 ===================== -->
+<section class="t b2">
+  <div class="t-head"><span class="name">B2 · Signal bleu</span><span class="meta">Navy profond #020617 · cyan #0EA5E9 · Inter system + JetBrains Mono</span></div>
+  <div class="t-body">
+    <div class="nav"><span class="lg">JT<em>.</em>Rombaldi</span><a href="#">Accueil</a><a href="#">Parcours</a><a href="#">Compét.</a><a href="#" class="on">Réalis.</a><a href="#">Veille</a><a href="#" class="cta">▤ Synthèse</a></div>
+    <div class="hero"><div class="grid-bg"></div>
+      <div class="kicker">BTS SIO · SISR · 2025–2026</div>
+      <h2>Jean-Toussaint Rombaldi</h2>
+      <p>Alternant réseau &amp; téléphonie d'entreprise chez IPKONEKT. Je déploie, configure et dépanne des infrastructures fibre, 4G et VoIP.</p>
+      <a href="#" class="btn p">▤ Tableau de synthèse</a><a href="#" class="btn s">Réalisations</a>
+    </div>
+    <div class="sec">Filtres</div>
+    <div class="chips"><span class="chip">Toutes</span><span class="chip">C1</span><span class="chip on">C2</span><span class="chip">C5</span><span class="chip on">Pro</span><span class="chip">Perso</span></div>
+    <div class="card"><span class="ctx">PRO</span><div class="id">R1</div><h3>Réseau fibre + backup 4G</h3><p>Configuration de routeurs fibre et bascule 4G pour la continuité de service.</p><span class="badge">C1</span><span class="badge">C2</span><span class="badge">C5</span></div>
+    <div class="card ph"><span class="ctx">⧗ À VENIR</span><div class="id">R7</div><h3>Homelab Linux</h3><p>Matériel en cours d'acquisition.</p></div>
+    <div class="sec">Compétences</div>
+    <div class="comp"><div><b>C1</b>Patrimoine <span class="ok">✓ bonne</span></div><div><b>C2</b>Incidents <span class="ok">✓ bonne</span></div><div><b>C3</b>Présence <span class="todo">⧗</span></div></div>
+    <div class="sec">Typo</div>
+    <div class="type"><p class="h1">Titre — Inter 700 serré</p><p class="h2">Rubrique — Inter 700</p><p class="body">Corps 16px Inter. Une seule famille, jeu sur les graisses et le tracking. Le mono n'apparaît que sur les valeurs techniques.</p><p class="mono">192.168.10.1 · vlan 20</p><small>Ambiance : outil réseau premium, précis</small></div>
+    <div class="sec">Palette</div>
+    <div class="pal"><div class="sw" style="background:#020617"></div><div class="sw" style="background:#0EA5E9"></div><div class="sw" style="background:#0E1223"></div><div class="sw" style="background:#1A1E2F"></div><div class="sw" style="background:#94A3B8"></div><div class="sw" style="background:#F8FAFC"></div></div>
+    <div class="verdict"><b>Lecture jury :</b> « réseau / infra ». Le bleu est LA couleur du monde réseau (liens, flux, paquets). Plus sobre que le vert, plus institutionnel, moins « hacker ».<span class="src">source : UI UX Pro Max · API Developer Portal (fond) + Modern Dark Cinema (typo) · accent ajusté cyan</span></div>
+  </div>
+</section>
+
+<!-- ===================== B3 ===================== -->
+<section class="t b3">
+  <div class="t-head"><span class="name">B3 · Ambre / LED</span><span class="meta">Noir bleuté #0B0F14 · ambre #F59E0B · Fira Code + Fira Sans</span></div>
+  <div class="t-body">
+    <div class="nav"><span class="lg">JT<em>.</em>Rombaldi</span><a href="#">Accueil</a><a href="#">Parcours</a><a href="#">Compét.</a><a href="#" class="on">Réalis.</a><a href="#">Veille</a><a href="#" class="cta">▤ Synthèse</a></div>
+    <div class="hero"><div class="grid-bg"></div>
+      <div class="kicker">[ONLINE] BTS SIO · SISR · 2025–2026</div>
+      <h2>Jean-Toussaint Rombaldi</h2>
+      <p>Alternant réseau &amp; téléphonie d'entreprise chez IPKONEKT. Je déploie, configure et dépanne des infrastructures fibre, 4G et VoIP.</p>
+      <a href="#" class="btn p">▤ Tableau de synthèse</a><a href="#" class="btn s">Réalisations</a>
+    </div>
+    <div class="sec">Filtres</div>
+    <div class="chips"><span class="chip">Toutes</span><span class="chip">C1</span><span class="chip on">C2</span><span class="chip">C5</span><span class="chip on">Pro</span><span class="chip">Perso</span></div>
+    <div class="card"><span class="ctx">PRO</span><div class="id">R1</div><h3>Réseau fibre + backup 4G</h3><p>Configuration de routeurs fibre et bascule 4G pour la continuité de service.</p><span class="badge">C1</span><span class="badge">C2</span><span class="badge">C5</span></div>
+    <div class="card ph"><span class="ctx">⧗ À VENIR</span><div class="id">R7</div><h3>Homelab Linux</h3><p>Matériel en cours d'acquisition.</p></div>
+    <div class="sec">Compétences</div>
+    <div class="comp"><div><b>C1</b>Patrimoine <span class="ok">✓ bonne</span></div><div><b>C2</b>Incidents <span class="ok">✓ bonne</span></div><div><b>C3</b>Présence <span class="todo">⧗</span></div></div>
+    <div class="sec">Typo</div>
+    <div class="type"><p class="h1">Titre — Fira Code</p><p class="h2">Rubrique — Fira Code 600</p><p class="body">Corps 16px Fira Sans. Une seule famille Fira : cohérence totale entre titres mono et corps sans. Angles plus droits.</p><p class="mono">192.168.10.1 · vlan 20</p><small>Ambiance : baie serveur, LEDs de statut, monitoring</small></div>
+    <div class="sec">Palette</div>
+    <div class="pal"><div class="sw" style="background:#0B0F14"></div><div class="sw" style="background:#F59E0B"></div><div class="sw" style="background:#131922"></div><div class="sw" style="background:#1C2430"></div><div class="sw" style="background:#94A3B8"></div><div class="sw" style="background:#F1F5F9"></div></div>
+    <div class="verdict"><b>Lecture jury :</b> « matériel / infra physique ». L'ambre évoque les LEDs de rack, les voyants, l'alerte. Le plus distinctif des trois, chaleureux sur fond froid. Légèrement plus « affirmé ».<span class="src">source : palette composée par moi (pas de match direct en base — la base donne un or #CA8A04 moins contrasté, ajusté en ambre) · typo Dashboard Data (Fira)</span></div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

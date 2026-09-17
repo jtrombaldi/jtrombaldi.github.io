@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture — Portfolio E5</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --line:#2b313d;
+    --ink:#e6e9ef; --ink2:#9aa4b2; --ink3:#6b7482;
+    --accent:#2dd4bf;      /* accent = raccourci prioritaire / éléments cliquables */
+    --pro:#60a5fa;         /* contexte professionnel */
+    --perso:#c084fc;       /* contexte personnel */
+    --warn:#f59e0b;        /* placeholder / à venir */
+    --radius:14px; --gap:16px;
+    font-synthesis:none;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5; padding:32px 20px 64px;
+  }
+  .wrap{max-width:1120px;margin:0 auto}
+  .note{
+    background:linear-gradient(90deg,rgba(245,158,11,.14),transparent);
+    border:1px solid rgba(245,158,11,.35); border-radius:10px;
+    padding:10px 14px; font-size:13px; color:#fcd9a0; margin-bottom:26px;
+  }
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.02em}
+  .sub{color:var(--ink2);font-size:14px;margin:0 0 30px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:var(--ink3);
+     margin:38px 0 16px;font-weight:600}
+  .section{border-top:1px solid var(--line);padding-top:6px}
+
+  /* NAV BAR mock */
+  .navbar{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:12px 16px;margin-bottom:8px;
+  }
+  .brand{font-weight:700;margin-right:auto;font-size:15px}
+  .brand span{color:var(--accent)}
+  .nav-link{padding:7px 12px;border-radius:8px;font-size:13px;color:var(--ink2);
+    border:1px solid transparent}
+  .nav-link:hover{background:var(--panel2);color:var(--ink)}
+  .nav-cta{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;
+    color:#052e2a;background:var(--accent);}
+  .cap{font-size:12px;color:var(--ink3);margin:6px 2px 0}
+
+  /* TREE */
+  .tree{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+  .home-card{
+    background:linear-gradient(135deg,var(--panel2),var(--panel));
+    border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;
+    display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  }
+  .home-card .t{font-weight:700;font-size:16px}
+  .home-card .d{color:var(--ink2);font-size:13px;margin-top:2px}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;
+    padding:6px 11px;border-radius:999px;background:rgba(45,212,191,.12);
+    color:var(--accent);border:1px solid rgba(45,212,191,.4)}
+
+  .pages{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--gap)}
+  @media(max-width:900px){.pages{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.pages{grid-template-columns:1fr}}
+  .page{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px;min-height:96px;position:relative;
+  }
+  .page .n{font-size:11px;color:var(--ink3);font-weight:600}
+  .page .t{font-weight:600;font-size:14px;margin-top:3px}
+  .page .d{font-size:12px;color:var(--ink2);margin-top:6px}
+  .page.hub{border-color:rgba(45,212,191,.5);box-shadow:0 0 0 1px rgba(45,212,191,.25) inset}
+  .page.hub .n{color:var(--accent)}
+  .page.synth{border-color:rgba(45,212,191,.5)}
+  .badge-hub{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;
+    color:var(--accent);letter-spacing:.06em}
+
+  /* FICHES grid */
+  .fiches{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+  @media(max-width:900px){.fiches{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.fiches{grid-template-columns:1fr}}
+  .fiche{
+    background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .fiche .id{font-weight:700;font-size:13px}
+  .fiche .ti{font-size:12px;color:var(--ink2);line-height:1.35;min-height:32px}
+  .tags{display:flex;flex-wrap:wrap;gap:5px}
+  .tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px;
+    background:#232833;color:var(--ink2);border:1px solid var(--line)}
+  .ctx{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px}
+  .ctx.pro{color:var(--pro);background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.4)}
+  .ctx.perso{color:var(--perso);background:rgba(192,132,252,.12);border:1px solid rgba(192,132,252,.4)}
+  .fiche.ph{border-style:dashed;opacity:.75}
+  .ph-tag{font-size:10px;font-weight:700;color:var(--warn);
+    background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);
+    padding:2px 7px;border-radius:6px;align-self:flex-start}
+
+  /* filters row */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 4px}
+  .filter{font-size:11px;padding:6px 10px;border-radius:8px;background:var(--panel2);
+    border:1px solid var(--line);color:var(--ink2)}
+  .filter b{color:var(--ink)}
+
+  /* clicks table */
+  table{width:100%;border-collapse:collapse;font-size:13px;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:var(--panel2);color:var(--ink2);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+  td:last-child{text-align:center;font-weight:700}
+  tr:last-child td{border-bottom:none}
+  .ok{color:var(--accent)}
+  .path{color:var(--ink2);font-family:ui-monospace,Menlo,monospace;font-size:12px}
+
+  /* oral timeline */
+  .timeline{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px}
+  .step{min-width:150px;flex:1;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:12px}
+  .step .time{font-size:11px;color:var(--accent);font-weight:700}
+  .step .pg{font-weight:600;font-size:13px;margin-top:4px}
+  .step .ds{font-size:11px;color:var(--ink2);margin-top:5px}
+  .arrow{align-self:center;color:var(--ink3);font-size:18px;flex:0 0 auto}
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-top:16px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Architecture de l'information</h1>
+  <p class="sub">Portfolio E5 · BTS SIO SISR · Jean-Toussaint Rombaldi — Étape 1 (conception)</p>
+
+  <div class="note">
+    ⚠️ Document de travail — schéma neutre pour valider la structure et la navigation.
+    Ce ne sont PAS les couleurs / la charte finale du portfolio (décidées à l'Étape 3).
+  </div>
+
+  <!-- NAV MODEL -->
+  <div class="section">
+    <h2>1 · Barre de navigation (persistante, sticky, sur toutes les pages)</h2>
+    <div class="navbar">
+      <div class="brand">JT<span>.</span>Rombaldi</div>
+      <div class="nav-link">Accueil</div>
+      <div class="nav-link">Parcours</div>
+      <div class="nav-link">Compétences</div>
+      <div class="nav-link">Réalisations</div>
+      <div class="nav-link">Veille</div>
+      <div class="nav-cta">▤ Tableau de synthèse</div>
+    </div>
+    <p class="cap">Le Tableau de synthèse est visuellement distinct (bouton accent) — le jury le cherche en premier (brief §3, §8.2).</p>
+  </div>
+
+  <!-- ARBORESCENCE -->
+  <div class="section">
+    <h2>2 · Arborescence plate (6 pages) — navigation en 1 clic</h2>
+    <div class="tree">
+      <div class="home-card">
+        <div>
+          <div class="t">🏠 Accueil <span style="color:var(--ink3);font-weight:400">/</span></div>
+          <div class="d">Identité en 30 s + navigation + raccourci direct vers le Tableau de synthèse</div>
+        </div>
+        <div class="chip">▤ Raccourci Tableau de synthèse (prioritaire)</div>
+      </div>
+
+      <div class="pages">
+        <div class="page">
+          <div class="n">PAGE 2</div><div class="t">Parcours</div>
+          <div class="d">Formation, IPKONEKT, projet pro. La plus courte.</div>
+        </div>
+        <div class="page">
+          <div class="n">PAGE 3</div><div class="t">Compétences E5</div>
+          <div class="d">Grille C1→C6 + couverture. Chaque carte → réalisations filtrées.</div>
+        </div>
+        <div class="page hub">
+          <div class="badge-hub">★ HUB</div>
+          <div class="n">PAGE 4</div><div class="t">Réalisations</div>
+          <div class="d">Galerie + filtres. Cœur du portfolio.</div>
+        </div>
+        <div class="page">
+          <div class="n">PAGE 5</div><div class="t">Veille techno</div>
+          <div class="d">Méthode, sources, 4–6 fiches d'analyse (C6).</div>
+        </div>
+        <div class="page synth">
+          <div class="n" style="color:var(--accent)">PAGE 6</div><div class="t">Tableau de synthèse</div>
+          <div class="d">Annexe VI-1 · SESSION 2026 + .xlsx + URL portfolio.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUB REALISATIONS -->
+  <div class="section">
+    <h2>3 · Page Réalisations = hub · filtres + fiches en pages dédiées</h2>
+    <div class="filters">
+      <span class="filter">Filtre compétence : <b>C1</b> · <b>C2</b> · <b>C3</b> · <b>C4</b> · <b>C5</b> · <b>C6</b></span>
+      <span class="filter">Filtre contexte : <b style="color:var(--pro)">Professionnel</b> · <b style="color:var(--perso)">Personnel</b></span>
+    </div>
+    <div class="fiches">
+      <div class="fiche">
+        <div class="id">R1</div>
+        <div class="ti">Réseau fibre + backup 4G (IPKONEKT)</div>
+        <div class="tags"><span class="tag">C1</span><span class="tag">C2</span><span class="tag">C5</span></div>
+        <span class="ctx pro">PRO</span>
+      </div>
+      <div class="fiche">
+        <div class="id">R2</div>
+        <div class="ti">Téléphonie Keyyo (IPKONEKT)</div>
+        <div class="tags"><span class="tag">C2</span><span class="tag">C5</span></div>
+        <span class="ctx pro">PRO · fusion R1 possible</span>
+      </div>
+      <div class="fiche">
+        <div class="id">R3</div>
+        <div class="ti">Diagnostic & incidents (IPKONEKT)</div>
+        <div class="tags"><span class="tag">C2</span></div>
+        <span class="ctx pro">PRO</span>
+      </div>
+      <div class="fiche">
+        <div class="id">R4</div>
+        <div class="ti">Automatisation rapports PPTX (Animalis)</div>
+        <div class="tags"><span class="tag">C4</span><span class="tag">C5</span></div>
+        <span class="ctx perso">PERSO / freelance</span>
+      </div>
+      <div class="fiche">
+        <div class="id">R5</div>
+        <div class="ti">Système de veille cybersécurité</div>
+        <div class="tags"><span class="tag">C6</span></div>
+        <span class="ctx perso">PERSO</span>
+      </div>
+      <div class="fiche">
+        <div class="id">R6</div>
+        <div class="ti">Dashboard cybersécurité Flask</div>
+        <div class="tags"><span class="tag">C5</span><span class="tag">C6</span></div>
+        <span class="ctx perso">PERSO</span>
+      </div>
+      <div class="fiche ph">
+        <div class="id">R7</div>
+        <div class="ti">Homelab Linux</div>
+        <span class="ph-tag">⧗ À VENIR — matériel</span>
+      </div>
+      <div class="fiche ph">
+        <div class="id">R8</div>
+        <div class="ti">Présence en ligne (C3)</div>
+        <span class="ph-tag">⧗ OPTION À CHOISIR</span>
+      </div>
+    </div>
+    <p class="cap">Chaque fiche = page dédiée (URL stable, export PDF possible, deep-link depuis Compétences). R7/R8 = placeholders explicites, jamais inventés (brief §6).</p>
+  </div>
+
+  <!-- CROSS LINKS -->
+  <div class="section">
+    <h2>4 · Maillage croisé</h2>
+    <div class="pages" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="page"><div class="t">Compétences → Réalisations</div><div class="d">Clic sur C2 ouvre Réalisations pré-filtrée (C2 → R1, R2, R3). Répond au §9.</div></div>
+      <div class="page"><div class="t">Fiche → Compétences</div><div class="d">Badges C-x cliquables dans l'en-tête de chaque fiche (§5).</div></div>
+      <div class="page"><div class="t">Fiche ↔ Fiche</div><div class="d">Navigation précédent/suivant pour enchaîner R4 → R1 → R6 à l'oral.</div></div>
+    </div>
+  </div>
+
+  <!-- ORAL -->
+  <div class="section">
+    <h2>5 · Wireflow du déroulé de l'oral (10 min · §10)</h2>
+    <div class="timeline">
+      <div class="step"><div class="time">0:00</div><div class="pg">Accueil</div><div class="ds">Se présenter, annoncer le plan</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="time">1:00</div><div class="pg">Parcours</div><div class="ds">Formation + IPKONEKT (rapide)</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="time">2:00</div><div class="pg">R4 · Animalis</div><div class="ds">Projet abouti, client réel</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="time">4:00</div><div class="pg">R1 · Routeurs/4G</div><div class="ds">Cœur SISR réseau</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="time">6:00</div><div class="pg">R6 / R7</div><div class="ds">Initiative autonome</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="time">8:00</div><div class="pg">Veille</div><div class="ds">1–2 sujets + analyse</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="time">9:00</div><div class="pg">Compétences</div><div class="ds">Rappel couverture, ouverture BUT</div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--accent)"></i> Accent / cliquable / prioritaire</span>
+    <span><i class="dot" style="background:var(--pro)"></i> Contexte professionnel</span>
+    <span><i class="dot" style="background:var(--perso)"></i> Contexte personnel</span>
+    <span><i class="dot" style="background:var(--warn)"></i> Placeholder (à venir / à décider)</span>
+  </div>
+
+</div>
+</body>
+</html>

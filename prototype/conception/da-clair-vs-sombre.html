@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DA — Clair vs Sombre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#8b93a1;color:#111;font-family:Inter,system-ui,sans-serif;padding:24px 14px 60px}
+  .top{max-width:1240px;margin:0 auto 18px;color:#fff}
+  .top h1{font-size:22px;margin:0 0 4px}
+  .top p{margin:0;font-size:13px;opacity:.9}
+  .cmp{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:920px){.cmp{grid-template-columns:1fr}}
+
+  /* ====== THEME TOKENS ====== */
+  .t{border-radius:14px;overflow:hidden;padding:0;min-height:100%;
+     font-family:var(--font-body);color:var(--fg);background:var(--bg)}
+  .t.light{
+    --bg:#F8FAFC; --fg:#020617; --card:#FFFFFF; --muted:#E8ECF1; --muted-fg:#475569;
+    --border:#E2E8F0; --primary:#0F172A; --on-primary:#FFFFFF; --accent:#0369A1; --on-accent:#FFFFFF;
+    --accent-soft:#E0F2FE; --ok:#15803D; --font-body:"Inter",system-ui,sans-serif; --font-mono:"JetBrains Mono",ui-monospace,monospace;
+    --font-head:"Inter",system-ui,sans-serif;
+  }
+  .t.dark{
+    --bg:#0F172A; --fg:#F8FAFC; --card:#1B2336; --muted:#272F42; --muted-fg:#94A3B8;
+    --border:#3B4658; --primary:#F8FAFC; --on-primary:#0F172A; --accent:#22C55E; --on-accent:#0F172A;
+    --accent-soft:#14301F; --ok:#4ADE80; --font-body:"IBM Plex Sans",system-ui,sans-serif; --font-mono:"JetBrains Mono",ui-monospace,monospace;
+    --font-head:"JetBrains Mono",ui-monospace,monospace;
+  }
+  .t-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .t-head .name{font-weight:700;font-size:15px}
+  .t-head .meta{font-size:12px;color:var(--muted-fg);font-family:var(--font-mono)}
+  .t-body{padding:18px}
+
+  /* nav */
+  .nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap;background:var(--card);
+    border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:16px}
+  .nav .lg{font-weight:800;margin-right:auto;font-size:15px;font-family:var(--font-head)}
+  .nav .lg em{color:var(--accent);font-style:normal}
+  .nav a{font-size:13px;color:var(--muted-fg);padding:6px 9px;border-radius:6px;text-decoration:none}
+  .nav a.on{color:var(--fg);background:var(--muted)}
+  .nav .cta{font-size:13px;font-weight:700;color:var(--on-accent);background:var(--accent);
+    padding:8px 13px;border-radius:7px;text-decoration:none}
+
+  /* hero */
+  .hero{padding:26px 22px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;position:relative;overflow:hidden}
+  .hero .kicker{font-family:var(--font-mono);font-size:12px;color:var(--accent);letter-spacing:.06em;margin-bottom:8px}
+  .hero h2{margin:0 0 8px;font-size:30px;line-height:1.1;letter-spacing:-.02em;font-family:var(--font-head);font-weight:800}
+  .hero p{margin:0 0 14px;font-size:16px;color:var(--muted-fg);max-width:520px}
+  .btn{display:inline-block;font-size:14px;font-weight:700;padding:10px 16px;border-radius:8px;text-decoration:none;margin:0 6px 6px 0}
+  .btn.p{background:var(--accent);color:var(--on-accent)}
+  .btn.s{background:transparent;color:var(--fg);border:1px solid var(--border)}
+  .grid-bg{position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size:28px 28px;mask-image:radial-gradient(ellipse at 80% 20%,#000 0%,transparent 60%)}
+  .hero > *{position:relative}
+
+  /* sections */
+  .sec{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-fg);margin:18px 0 8px}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .chip{font-size:12px;font-weight:600;padding:6px 11px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--muted-fg)}
+  .chip.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+
+  /* card */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:560px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;transition:transform .2s,border-color .2s}
+  .card:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .card .id{font-family:var(--font-mono);font-size:11px;color:var(--accent);font-weight:600}
+  .card h3{margin:4px 0 6px;font-size:16px;line-height:1.3;font-family:var(--font-head);font-weight:700}
+  .card p{margin:0 0 10px;font-size:14px;color:var(--muted-fg)}
+  .badge{display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;
+    background:var(--accent-soft);color:var(--accent);margin-right:4px}
+  .ctx{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--muted);color:var(--muted-fg);float:right}
+  .card.ph{border-style:dashed;opacity:.65}
+
+  /* competence */
+  .comp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .comp div{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px}
+  .comp b{display:block;font-family:var(--font-mono);color:var(--accent);margin-bottom:3px}
+  .comp .ok{color:var(--ok);font-weight:700}
+  .comp .todo{color:#F59E0B;font-weight:700}
+
+  /* type */
+  .type{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+  .type .h1{font-family:var(--font-head);font-size:26px;font-weight:800;letter-spacing:-.02em;margin:0 0 2px}
+  .type .h2{font-family:var(--font-head);font-size:18px;font-weight:700;margin:0 0 6px}
+  .type .body{font-size:16px;line-height:1.55;margin:0 0 6px}
+  .type .mono{font-family:var(--font-mono);font-size:13px;color:var(--muted-fg)}
+  .type small{display:block;font-size:11px;color:var(--muted-fg);margin-top:8px;font-family:var(--font-mono)}
+
+  /* palette */
+  .pal{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  .sw{height:44px;border-radius:8px;border:1px solid var(--border);position:relative}
+  .sw span{position:absolute;left:6px;bottom:4px;font-family:var(--font-mono);font-size:9px;color:var(--muted-fg)}
+  .sw.lbl-on span{color:#fff;mix-blend-mode:difference}
+
+  .verdict{margin:16px 0 0;padding:12px 14px;border-radius:10px;background:var(--muted);font-size:13px;line-height:1.5}
+  .verdict b{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>Direction artistique — Piste A (clair) vs Piste B (sombre)</h1>
+  <p>Mêmes composants dans les deux, pour comparer honnêtement. Style commun : Minimalism &amp; Swiss. Contrastes vérifiés AA. Tu choisis un mode → je te sors des variantes dans ce mode.</p>
+</div>
+
+<div class="cmp">
+
+<!-- ================= PISTE A — CLAIR ================= -->
+<section class="t light">
+  <div class="t-head"><span class="name">Piste A — Clair · « Dossier technique »</span><span class="meta">Inter · navy #0F172A · accent bleu #0369A1</span></div>
+  <div class="t-body">
+
+    <div class="nav">
+      <span class="lg">JT<em>.</em>Rombaldi</span>
+      <a href="#">Accueil</a><a href="#">Parcours</a><a href="#">Compétences</a><a href="#" class="on">Réalisations</a><a href="#">Veille</a>
+      <a href="#" class="cta">▤ Tableau de synthèse</a>
+    </div>
+
+    <div class="hero">
+      <div class="grid-bg"></div>
+      <div class="kicker">BTS SIO · OPTION SISR · 2025–2026</div>
+      <h2>Jean-Toussaint Rombaldi</h2>
+      <p>Alternant réseau &amp; téléphonie d'entreprise chez IPKONEKT. Je déploie, configure et dépanne des infrastructures fibre, 4G et VoIP.</p>
+      <a href="#" class="btn p">▤ Voir le tableau de synthèse</a>
+      <a href="#" class="btn s">Voir les réalisations</a>
+    </div>
+
+    <div class="sec">Filtres — page Réalisations</div>
+    <div class="chips">
+      <span class="chip">Toutes</span><span class="chip">C1</span><span class="chip on">C2</span><span class="chip">C3</span>
+      <span class="chip">C4</span><span class="chip">C5</span><span class="chip">C6</span>
+      <span class="chip on">Professionnel</span><span class="chip">Personnel</span>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <span class="ctx">PRO</span><div class="id">R1</div>
+        <h3>Réseau fibre + backup 4G</h3>
+        <p>Configuration de routeurs fibre et bascule 4G pour la continuité de service client.</p>
+        <span class="badge">C1</span><span class="badge">C2</span><span class="badge">C5</span>
+      </div>
+      <div class="card ph">
+        <span class="ctx">⧗ À VENIR</span><div class="id">R7</div>
+        <h3>Homelab Linux</h3>
+        <p>Serveur personnel — matériel en cours d'acquisition.</p>
+      </div>
+    </div>
+
+    <div class="sec">Compétences E5 — couverture</div>
+    <div class="comp">
+      <div><b>C1</b>Patrimoine <span class="ok">✓ bonne</span></div>
+      <div><b>C2</b>Incidents <span class="ok">✓ bonne</span></div>
+      <div><b>C3</b>Présence en ligne <span class="todo">⧗ à construire</span></div>
+    </div>
+
+    <div class="sec">Typographie</div>
+    <div class="type">
+      <p class="h1">Titre de page — Inter 800</p>
+      <p class="h2">Sous-titre de rubrique — Inter 700</p>
+      <p class="body">Corps de texte 16px Inter 400. Lisible sur l'écran du centre d'examen comme sur tablette. Interligne 1.55.</p>
+      <p class="mono">192.168.10.1 · vlan 20 · JetBrains Mono pour les valeurs techniques</p>
+      <small>1 famille principale (Inter) + 1 mono pour la technique. Chargement léger.</small>
+    </div>
+
+    <div class="sec">Palette</div>
+    <div class="pal">
+      <div class="sw" style="background:#0F172A"><span style="color:#94A3B8">primary</span></div>
+      <div class="sw" style="background:#0369A1"><span style="color:#cfe8f7">accent</span></div>
+      <div class="sw" style="background:#F8FAFC"><span>bg</span></div>
+      <div class="sw" style="background:#FFFFFF"><span>card</span></div>
+      <div class="sw" style="background:#E8ECF1"><span>muted</span></div>
+      <div class="sw" style="background:#475569"><span style="color:#cbd5e1">muted-fg</span></div>
+    </div>
+
+    <div class="verdict"><b>Ce que ça dit au jury :</b> dossier technique propre, institutionnel, imprimable tel quel. Zéro risque de perception « gadget ». Le plus sûr pour un document probatoire.</div>
+  </div>
+</section>
+
+<!-- ================= PISTE B — SOMBRE ================= -->
+<section class="t dark">
+  <div class="t-head"><span class="name">Piste B — Sombre · « Console infra »</span><span class="meta">IBM Plex Sans + JetBrains Mono · fond #0F172A · accent vert #22C55E</span></div>
+  <div class="t-body">
+
+    <div class="nav">
+      <span class="lg">JT<em>.</em>Rombaldi</span>
+      <a href="#">Accueil</a><a href="#">Parcours</a><a href="#">Compétences</a><a href="#" class="on">Réalisations</a><a href="#">Veille</a>
+      <a href="#" class="cta">▤ Tableau de synthèse</a>
+    </div>
+
+    <div class="hero">
+      <div class="grid-bg"></div>
+      <div class="kicker">$ whoami — BTS SIO · SISR · 2025–2026</div>
+      <h2>Jean-Toussaint Rombaldi</h2>
+      <p>Alternant réseau &amp; téléphonie d'entreprise chez IPKONEKT. Je déploie, configure et dépanne des infrastructures fibre, 4G et VoIP.</p>
+      <a href="#" class="btn p">▤ Voir le tableau de synthèse</a>
+      <a href="#" class="btn s">Voir les réalisations</a>
+    </div>
+
+    <div class="sec">Filtres — page Réalisations</div>
+    <div class="chips">
+      <span class="chip">Toutes</span><span class="chip">C1</span><span class="chip on">C2</span><span class="chip">C3</span>
+      <span class="chip">C4</span><span class="chip">C5</span><span class="chip">C6</span>
+      <span class="chip on">Professionnel</span><span class="chip">Personnel</span>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <span class="ctx">PRO</span><div class="id">R1</div>
+        <h3>Réseau fibre + backup 4G</h3>
+        <p>Configuration de routeurs fibre et bascule 4G pour la continuité de service client.</p>
+        <span class="badge">C1</span><span class="badge">C2</span><span class="badge">C5</span>
+      </div>
+      <div class="card ph">
+        <span class="ctx">⧗ À VENIR</span><div class="id">R7</div>
+        <h3>Homelab Linux</h3>
+        <p>Serveur personnel — matériel en cours d'acquisition.</p>
+      </div>
+    </div>
+
+    <div class="sec">Compétences E5 — couverture</div>
+    <div class="comp">
+      <div><b>C1</b>Patrimoine <span class="ok">✓ bonne</span></div>
+      <div><b>C2</b>Incidents <span class="ok">✓ bonne</span></div>
+      <div><b>C3</b>Présence en ligne <span class="todo">⧗ à construire</span></div>
+    </div>
+
+    <div class="sec">Typographie</div>
+    <div class="type">
+      <p class="h1">Titre de page — JetBrains Mono</p>
+      <p class="h2">Sous-titre — JetBrains Mono 700</p>
+      <p class="body">Corps de texte 16px IBM Plex Sans 400. Le mono est réservé aux titres et valeurs techniques, le corps reste en sans pour la lisibilité longue.</p>
+      <p class="mono">192.168.10.1 · vlan 20 · $ systemctl status nginx</p>
+      <small>Mono en titres = identité « console ». Corps en Plex Sans = confort de lecture.</small>
+    </div>
+
+    <div class="sec">Palette</div>
+    <div class="pal">
+      <div class="sw" style="background:#0F172A"><span>bg</span></div>
+      <div class="sw" style="background:#22C55E"><span style="color:#0F172A">accent</span></div>
+      <div class="sw" style="background:#1B2336"><span>card</span></div>
+      <div class="sw" style="background:#272F42"><span>muted</span></div>
+      <div class="sw" style="background:#94A3B8"><span style="color:#0F172A">muted-fg</span></div>
+      <div class="sw" style="background:#F8FAFC"><span style="color:#0F172A">fg</span></div>
+    </div>
+
+    <div class="verdict"><b>Ce que ça dit au jury :</b> identité SISR affirmée, cohérente avec ton dashboard Flask dark et le monde de l'infra. Plus de caractère — mais à surveiller : impression papier moins bonne, et exige des contrastes irréprochables.</div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

@@ -44,6 +44,7 @@ if (!off) {
       const ry = gsap.quickTo(card, 'rotationY', { duration: 0.45, ease: 'power3.out' });
       gsap.set(card, { transformPerspective: 900, transformOrigin: 'center' });
       card.addEventListener('pointermove', (e) => {
+        if (root.classList.contains('flipping')) return; // 3) jamais de tilt pendant une transition de filtre
         const r = card.getBoundingClientRect();
         const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
         card.style.setProperty('--mx', `${px * 100}%`); card.style.setProperty('--my', `${py * 100}%`);

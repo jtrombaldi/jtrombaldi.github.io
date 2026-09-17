@@ -97,6 +97,7 @@ html[data-motion="off"] [data-reveal] { opacity: 1 !important; transform: none !
 a.card:hover, article.card:hover { border-color: var(--accent-text);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent), 0 18px 40px -18px color-mix(in srgb, var(--accent) 55%, transparent); }
 html.gsap a.card:hover { transform: none; } /* GSAP gère le basculement 3D */
+html.gsap .card { transition-property: border-color, box-shadow; } /* jamais de transition CSS sur transform quand GSAP anime */
 .card__arrow { position: absolute; right: var(--sp-4); bottom: var(--sp-3); font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent-text);
   opacity: 0; transform: translateX(-10px); transition: opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease); }
 .card:hover .card__arrow { opacity: 1; transform: none; }

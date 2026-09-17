@@ -34,7 +34,8 @@ const realisations = (await getCollection('realisations')).sort((a, b) => a.data
   <script>
     import gsap from 'gsap';
     import { Flip } from 'gsap/Flip';
-    gsap.registerPlugin(Flip);
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    gsap.registerPlugin(Flip, ScrollTrigger);
     // Filtres cumulables. L'état vit dans l'URL (?comp=C2&ctx=pro) : partageable, bouton retour fonctionnel,
     // et la page Compétences peut deep-linker directement.
     const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
@@ -46,6 +47,12 @@ const realisations = (await getCollection('realisations')).sort((a, b) => a.data
     function apply(push = true, anim = true) {
       // Transition animée (Flip) uniquement si les animations sont autorisées (html.gsap posé par motion.ts)
       const animate = anim && document.documentElement.classList.contains('gsap');
+      if (animate) {
+        // 1) un Flip encore en cours (clics rapprochés) est terminé net avant d'en lancer un autre
+        Flip.killFlipsOf(cards, true);
+        // 2) le reveal au défilement ne doit plus jamais toucher les cartes une fois qu'on filtre
+        ScrollTrigger.getAll().forEach(t => { if (cards.includes(t.trigger as HTMLElement)) t.kill(); });
+      }
       const before = animate ? Flip.getState(cards) : null;
       let n = 0;
       for (const c of cards) {
@@ -58,13 +65,21 @@ const realisations = (await getCollection('realisations')).sort((a, b) => a.data
         // Toute carte affichée est forcée visible : le reveal initial (autoAlpha 0 / visibility hidden) peut
         // être encore en attente, et Flip ne détecte l'entrée que si l'élément est réellement visible « après ».
         const shown = cards.filter(c => !c.classList.contains('is-hidden'));
-        gsap.killTweensOf(shown); gsap.set(shown, { autoAlpha: 1, y: 0 });
+        // seules les propriétés du reveal sont tuées : les tweens persistants du tilt (quickTo) restent intacts
+        gsap.killTweensOf(shown, 'autoAlpha,opacity,visibility,y'); gsap.set(shown, { autoAlpha: 1, y: 0 });
+        document.documentElement.classList.add('flipping');
         Flip.from(before, {
           // absoluteOnLeave : seules les cartes sortantes passent en absolu ; les autres restent dans le flux
           // (sinon la grille s'effondre à 0 px pendant l'animation et tout saute à la fin)
           duration: 0.55, ease: 'power2.inOut', stagger: 0.03, absoluteOnLeave: true, nested: true,
           onEnter: (els) => gsap.fromTo(els, { autoAlpha: 0, scale: 0.92, y: 0 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'power2.out', stagger: 0.04 }),
           onLeave: (els) => gsap.to(els, { autoAlpha: 0, scale: 0.92, duration: 0.3, ease: 'power2.in' }),
+          // à la fin : transform remis à plat (plus aucun résidu de déplacement possible), perspective 3D rétablie
+          onComplete: () => {
+            // remise à zéro explicite (pas de clearProps : il casserait le cache des tweens de tilt)
+            gsap.set(shown, { x: 0, y: 0, scale: 1, rotationX: 0, rotationY: 0, transformPerspective: 900, transformOrigin: 'center' });
+            document.documentElement.classList.remove('flipping');
+          },
         });
       }
       if (count) count.textContent = String(n);

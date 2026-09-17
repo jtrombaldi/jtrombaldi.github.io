@@ -10,8 +10,8 @@ Réalisation candidate : **« Conception, mise en ligne et sécurisation du port
 | 3 | Dépôt git daté (historique du projet) | `git init` le 17/09/26, 1er commit `26cd5be` | ✅ existe |
 | 4 | Achat du nom de domaine (facture / capture registrar) | OVH ou Gandi | ⏳ décision candidat |
 | 5 | Configuration DNS faite par le candidat (enregistrements A / CNAME) | interface du registrar | ⏳ |
-| 6 | Certificat HTTPS actif pour le domaine | cadenas + détails du certificat | ⏳ |
-| 7 | Déploiement automatisé (push → mise en ligne) | GitHub Actions / Pages | ⏳ |
+| 6 | Certificat HTTPS actif | https://jtrombaldi.github.io (HTTPS forcé) — à refaire sur le domaine perso | ✅ partiel |
+| 7 | Déploiement automatisé (push → mise en ligne) | `.github/workflows/deploy.yml`, 1er déploiement 17/09/26, run #35266265681 | ✅ existe |
 | 8 | Rapport Lighthouse (performance, accessibilité, SEO) | Chrome DevTools, export HTML | ⏳ |
 | 9 | Mentions légales rédigées et accessibles | lien pied de page | ⏳ |
 | 10 | Référencement de base : `robots.txt`, `sitemap.xml`, balises meta | fichiers du site | ⏳ |

@@ -7,7 +7,7 @@ Réalisation candidate : **« Conception, mise en ligne et sécurisation du port
 |---|---|---|---|
 | 1 | Brief fonctionnel + conception documentée | `doc/PROJECT_BRIEF.md`, `prototype/conception/` | ✅ existe |
 | 2 | Charte et design system avec contrastes WCAG vérifiés | `doc/DESIGN_SYSTEM.md` | ✅ existe |
-| 3 | Dépôt git daté (historique du projet) | `git init` + premiers commits | ⏳ à faire |
+| 3 | Dépôt git daté (historique du projet) | `git init` le 17/09/26, 1er commit `f59c7fa` | ✅ existe |
 | 4 | Achat du nom de domaine (facture / capture registrar) | OVH ou Gandi | ⏳ décision candidat |
 | 5 | Configuration DNS faite par le candidat (enregistrements A / CNAME) | interface du registrar | ⏳ |
 | 6 | Certificat HTTPS actif pour le domaine | cadenas + détails du certificat | ⏳ |

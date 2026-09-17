@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { competences } from '../data/competences';
+const realisations = (await getCollection('realisations')).sort((a, b) => a.data.ordre - b.data.ordre);
+const couvrent = (id: string) => realisations.filter(r => r.data.competences.includes(id as any));
+const couverte = (id: string) => couvrent(id).some(r => r.data.statut !== 'placeholder');
+const nbCouvertes = competences.filter(c => couverte(c.id)).length;
+---
+<Base title="Compétences E5">
+  <section class="section">
+    <p class="label">Page 3</p>
+    <h1>Compétences E5</h1>
+    <div class="panel" style="margin:var(--sp-6) 0;display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center">
+      <span class="label" style="margin:0">Couverture</span>
+      <div class="badges">
+        {competences.map(c => (
+          <span class:list={['badge']} style={couverte(c.id) ? '' : 'background:transparent;border:1px dashed var(--warning);color:var(--warning)'}>
+            {c.id} {couverte(c.id) ? '✓' : '⧗'}
+          </span>
+        ))}
+      </div>
+      <span class="small">{nbCouvertes}/6 compétences couvertes{nbCouvertes < 6 ? ' — les autres sont en construction' : ''}</span>
+    </div>
+
+    <div class="grid grid--3">
+      {competences.map(c => {
+        const rs = couvrent(c.id);
+        const ok = couverte(c.id);
+        return (
+          <article class:list={['card', { 'card--placeholder': !ok }]} id={c.id.toLowerCase()}>
+            <div class="card__top">
+              <span class="card__id">{c.id}</span>
+              <span class:list={['state', ok ? 'state--ok' : 'state--todo']}>{ok ? '✓ couverte' : '⧗ à construire'}</span>
+            </div>
+            <h3>{c.titre}</h3>
+            <p class="small" style="margin-bottom:var(--sp-2)">Maîtrise : <strong style="color:var(--fg)">{c.maitrise}</strong></p>
+            <details>
+              <summary class="small" style="cursor:pointer">Sous-compétences du référentiel</summary>
+              <ul class="small" style="padding-left:1.1rem;margin:var(--sp-2) 0 0">{c.sous.map(s => <li>{s}</li>)}</ul>
+            </details>
+            <p class="label" style="margin-top:var(--sp-3)">Démontrée par</p>
+            <div class="badges">
+              {rs.map(r => (
+                <a class="badge" href={`/realisations/${r.id}`} title={r.data.titre}>→ {r.id.toUpperCase()}{r.data.statut === 'placeholder' ? ' ⧗' : ''}</a>
+              ))}
+              <a class="tag" href={`/realisations?comp=${c.id}`}>voir la liste filtrée</a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+    <p class="small" style="margin-top:var(--sp-4)">Les niveaux de maîtrise sont renseignés par le candidat, sans pourcentage : partielle, bonne ou excellente.</p>
+  </section>
+</Base>

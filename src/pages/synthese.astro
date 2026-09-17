@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { competences } from '../data/competences';
+import { candidat as c } from '../data/candidat';
+const all = (await getCollection('realisations')).sort((a, b) => a.data.ordre - b.data.ordre);
+const annee1 = all.filter(r => r.data.annee === 1);
+const annee2 = all.filter(r => r.data.annee === 2);
+const xlsx = '/tableau-de-synthese-annexe-VI-1-2026.xlsx';
+---
+<Base title="Tableau de synthèse">
+  <section class="section">
+    <p class="label">Page 6 · annexe VI-1 · {c.session}</p>
+    <h1>Tableau de synthèse</h1>
+    <p class="small">Tableau de synthèse des réalisations professionnelles — BTS Services Informatiques aux Organisations. Format conforme au modèle officiel de l'épreuve E5.</p>
+
+    <div class="panel" style="margin:var(--sp-6) 0">
+      <div class="table-wrap" style="border:0;background:transparent">
+        <table>
+          <tbody>
+          <tr><th>Centre de formation</th><td>{c.etablissement}</td><th>N° candidat</th><td class="todo">à compléter</td></tr>
+          <tr><th>NOM et prénom</th><td><span style="font-weight:700">{c.nom.toUpperCase()} {c.prenom}</span></td><th>Option</th><td class="mono">☑ SISR &nbsp; ☐ SLAM</td></tr>
+          <tr><th>Adresse URL du portfolio</th><td colspan="3"><span class="mono" style="color:var(--accent-text);font-weight:700">{c.url}</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:var(--sp-4);display:flex;gap:var(--sp-2);flex-wrap:wrap">
+        <a class="btn btn--primary" href={xlsx} download>⬇ Télécharger le tableau officiel (.xlsx)</a>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="min-width:280px">Réalisations professionnelles<br><span style="text-transform:none;letter-spacing:0;font-family:var(--font-sans);font-weight:400">(intitulé et liste des documents et productions associés)</span></th>
+            <th style="min-width:150px">Période<br><span style="text-transform:none;letter-spacing:0;font-family:var(--font-sans);font-weight:400">(du JJ/MM/AA au JJ/MM/AA)</span></th>
+            {competences.map(k => <th class="center" title={k.titre}>{k.id}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="sectionrow"><td colspan={2 + competences.length}>Réalisations en milieu professionnel en cours de première année</td></tr>
+          {annee1.length === 0 && <tr><td class="todo" colspan={2 + competences.length}>À statuer selon les dates de l'alternance.</td></tr>}
+          {annee1.map(r => (
+            <tr><td><a href={`/realisations/${r.id}`}>{r.id.toUpperCase()} — {r.data.titre}</a></td><td>{r.data.periode}</td>
+              {competences.map(k => <td class="center">{r.data.competences.includes(k.id) ? <span class="check">✓</span> : ''}</td>)}</tr>
+          ))}
+          <tr class="sectionrow"><td colspan={2 + competences.length}>Réalisations en milieu professionnel en cours de seconde année</td></tr>
+          {annee2.map(r => (
+            <tr style={r.data.statut === 'placeholder' ? 'opacity:.6' : ''}>
+              <td><a href={`/realisations/${r.id}`}>{r.id.toUpperCase()} — {r.data.titre}</a>{r.data.statut === 'placeholder' && <span class="state state--todo"> ⧗</span>}<br><span class="small">Documents : <span class="todo">à lister</span></span></td>
+              <td>{r.data.periode}</td>
+              {competences.map(k => <td class="center">{r.data.competences.includes(k.id) ? <span class="check">✓</span> : ''}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="small" style="margin-top:var(--sp-2)">↔ Le tableau défile horizontalement sur petit écran. Les intitulés sont des liens vers les fiches.</p>
+
+    <details style="margin-top:var(--sp-6)">
+      <summary class="small" style="cursor:pointer">Légende des compétences (référentiel)</summary>
+      <div class="grid grid--3" style="margin-top:var(--sp-3)">
+        {competences.map(k => (
+          <div class="panel"><p class="label">{k.id}</p><p class="small"><strong style="color:var(--fg)">{k.titre}</strong></p>
+            <ul class="small" style="padding-left:1rem;margin:var(--sp-2) 0 0">{k.sous.map(s => <li>▸ {s}</li>)}</ul></div>
+        ))}
+      </div>
+    </details>
+  </section>
+</Base>

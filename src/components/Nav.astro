@@ -1,0 +1,33 @@
+---
+import { candidat } from '../data/candidat';
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const links = [
+  { href: '/', label: 'Accueil' },
+  { href: '/parcours', label: 'Parcours' },
+  { href: '/competences', label: 'Compétences' },
+  { href: '/realisations', label: 'Réalisations' },
+  { href: '/veille', label: 'Veille' },
+];
+const isCurrent = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+---
+<header class="nav">
+  <div class="container nav__in">
+    <a class="nav__brand" href="/">{candidat.prenom.split('-').map(p => p[0]).join('')}<em>.</em>{candidat.nom}</a>
+    <button class="nav__burger" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Ouvrir le menu">☰</button>
+    <ul class="nav__links" id="nav-links">
+      {links.map(l => (
+        <li><a class="nav__link" href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a></li>
+      ))}
+      <li><a class="btn btn--primary nav__cta" href="/synthese">▤ Tableau de synthèse</a></li>
+    </ul>
+  </div>
+</header>
+<script>
+  const burger = document.querySelector<HTMLButtonElement>('.nav__burger');
+  const links = document.getElementById('nav-links');
+  burger?.addEventListener('click', () => {
+    const open = links?.dataset.open === 'true';
+    if (links) links.dataset.open = String(!open);
+    burger.setAttribute('aria-expanded', String(!open));
+  });
+</script>

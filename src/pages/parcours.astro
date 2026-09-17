@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import { candidat as c } from '../data/candidat';
+const technos = ['Réseau', 'Fibre / 4G', 'Téléphonie IP (Keyyo)', 'Linux', 'Windows', 'Virtualisation', 'Python', 'Support utilisateurs'];
+---
+<Base title="Parcours">
+  <section class="section">
+    <p class="label">Page 2</p>
+    <h1>Parcours</h1>
+    <div class="fiche__layout" style="margin-top:var(--sp-6)">
+      <div class="stack">
+        <div class="panel">
+          <p class="label">Formation actuelle</p>
+          <h2>{c.formationLong}</h2>
+          <p class="small">{c.etablissement} · {c.anneeScolaire}</p>
+        </div>
+        <div class="panel">
+          <p class="label">Expérience professionnelle</p>
+          <h2>{c.entreprise} — alternance</h2>
+          <p class="small">{c.alternanceDates} · {c.entrepriseDetail}</p>
+          <ul style="margin:var(--sp-3) 0 0;padding-left:1.2rem">
+            <li>Déploiement et mise en service de solutions réseau fibre et backup 4G</li>
+            <li>Mise en service et support de la téléphonie professionnelle Keyyo</li>
+            <li>Diagnostic d'incidents, support technique et logistique des équipements</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <p class="label">Projet professionnel</p>
+          <p>{c.projetPro}</p>
+        </div>
+      </div>
+      <aside class="fiche__aside">
+        <div class="panel">
+          <p class="label">Environnement technologique</p>
+          <div class="tags">{technos.map(t => <span class="tag">{t}</span>)}</div>
+          <p class="small" style="margin-top:var(--sp-3)">Ancrage, pas un CV. Les bases acquises en première année ont facilité la prise en main de ces environnements en entreprise.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>

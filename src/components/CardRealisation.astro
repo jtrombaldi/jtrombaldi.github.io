@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { entry: CollectionEntry<'realisations'>; }
+const { entry } = Astro.props;
+const d = entry.data;
+const id = entry.id.toUpperCase();
+const placeholder = d.statut === 'placeholder';
+---
+<a
+  class:list={['card', { 'card--placeholder': placeholder }]}
+  href={`/realisations/${entry.id}`}
+  data-comp={d.competences.join(' ')}
+  data-ctx={d.contexte}
+  data-statut={d.statut}
+>
+  <div class="card__top">
+    <span class="card__id">{id}</span>
+    {placeholder
+      ? <span class="ctx ctx--placeholder">⧗ à venir</span>
+      : <span class:list={['ctx', `ctx--${d.contexte}`]}>{d.contexte === 'pro' ? 'Pro' : d.precision ?? 'Perso'}</span>}
+  </div>
+  <h3>{d.titre}</h3>
+  <p>{d.resume}</p>
+  <div class="badges">
+    {d.competences.map(c => <span class="badge">{c}</span>)}
+    {d.organisation && <span class="tag">{d.organisation}</span>}
+  </div>
+</a>

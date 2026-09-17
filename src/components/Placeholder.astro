@@ -1,0 +1,9 @@
+---
+// Bloc « à venir » explicite : jamais de contenu inventé (brief §6).
+interface Props { titre?: string; }
+const { titre = 'Réalisation à venir' } = Astro.props;
+---
+<div class="panel panel--warn" role="note">
+  <p class="label" style="color:var(--warning)">⧗ {titre}</p>
+  <p class="small" style="color:inherit"><slot /></p>
+</div>

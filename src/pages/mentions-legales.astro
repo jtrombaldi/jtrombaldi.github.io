@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import { candidat as c } from '../data/candidat';
+---
+<Base title="Mentions légales">
+  <section class="section">
+    <h1>Mentions légales</h1>
+    <div class="panel stack" style="margin-top:var(--sp-6)">
+      <p><strong>Éditeur</strong> — {c.prenom} {c.nom}, étudiant en {c.formation}. Site personnel à vocation pédagogique (support de l'épreuve E5).</p>
+      <p><strong>Hébergement</strong> — <span class="todo">à compléter à la mise en ligne (hébergeur, adresse).</span></p>
+      <p><strong>Données personnelles</strong> — Ce site ne collecte aucune donnée, ne dépose aucun cookie et n'utilise aucun outil de mesure d'audience. Les captures et schémas issus d'environnements professionnels sont anonymisés.</p>
+      <p><strong>Contact</strong> — <span class="todo">adresse professionnelle à indiquer.</span></p>
+    </div>
+  </section>
+</Base>

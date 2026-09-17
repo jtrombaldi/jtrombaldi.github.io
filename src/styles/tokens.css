@@ -1,0 +1,39 @@
+/* ============================================================
+   TOKENS — source : doc/DESIGN_SYSTEM.md (verrouillé le 17/09/26)
+   On ne code jamais une couleur ou une taille en dur ailleurs.
+   ============================================================ */
+:root {
+  /* couleurs */
+  --bg: #020617; --card: #0E1223; --muted: #1A1E2F; --border: #283047;
+  --fg: #F8FAFC; --muted-fg: #94A3B8;
+  --primary: #F8FAFC; --on-primary: #020617;
+  --accent: #0EA5E9; --accent-text: #38BDF8; --on-accent: #020617; --accent-soft: #0B2A3A;
+  --success: #4ADE80; --warning: #F59E0B; --destructive: #EF4444; --ring: #38BDF8;
+  --ctx-pro: #38BDF8; --ctx-perso: #C084FC;
+
+  /* typo */
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-display: 2.5rem; --fs-h1: 2rem; --fs-h2: 1.5rem; --fs-h3: 1.25rem;
+  --fs-body: 1rem; --fs-small: .875rem; --fs-label: .75rem;
+  --lh-tight: 1.15; --lh-body: 1.55;
+
+  /* espacements (base 4px) */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-6: 24px; --sp-8: 32px;
+  --sp-12: 48px; --sp-16: 64px; --sp-24: 96px;
+
+  /* arrondis */
+  --r-badge: 6px; --r-btn: 8px; --r-card: 10px; --r-pill: 999px;
+
+  /* mouvement */
+  --dur-fast: 150ms; --dur-base: 200ms; --dur-slow: 350ms; --ease: cubic-bezier(.2, .8, .2, 1);
+
+  /* layout */
+  --container: 1120px; --nav-h: 64px; --touch: 44px; --gutter: 20px;
+}
+
+/* Interrupteur global d'animations (brief §7) + préférence système */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; }
+}
+html[data-motion="off"] { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; }

@@ -1,0 +1,61 @@
+---
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-sans/700.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/600.css';
+import '@fontsource/jetbrains-mono/700.css';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import { candidat } from '../data/candidat';
+
+interface Props { title: string; description?: string; }
+const { title, description = `Portfolio E5 — ${candidat.prenom} ${candidat.nom}, ${candidat.formation}` } = Astro.props;
+const fullTitle = `${title} · ${candidat.prenom} ${candidat.nom}`;
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#020617" />
+    <!-- Interrupteur d'animations : appliqué avant le rendu pour éviter tout flash -->
+    <script is:inline>
+      try { if (localStorage.getItem('motion') === 'off') document.documentElement.dataset.motion = 'off'; } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <Nav />
+    <main id="contenu" class="container">
+      <slot />
+    </main>
+    <footer class="footer">
+      <div class="container footer__in">
+        <span>{candidat.prenom} {candidat.nom} · {candidat.formation} · {candidat.session}</span>
+        <span style="display:flex;gap:var(--sp-3);align-items:center;flex-wrap:wrap">
+          <a href="/mentions-legales">Mentions légales</a>
+          <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="false">animations : on</button>
+        </span>
+      </div>
+    </footer>
+    <script>
+      const btn = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+      const root = document.documentElement;
+      const sync = () => {
+        const off = root.dataset.motion === 'off';
+        if (btn) { btn.textContent = `animations : ${off ? 'off' : 'on'}`; btn.setAttribute('aria-pressed', String(off)); }
+      };
+      btn?.addEventListener('click', () => {
+        const off = root.dataset.motion === 'off';
+        if (off) { delete root.dataset.motion; } else { root.dataset.motion = 'off'; }
+        try { localStorage.setItem('motion', off ? 'on' : 'off'); } catch (e) {}
+        sync();
+      });
+      sync();
+    </script>
+  </body>
+</html>

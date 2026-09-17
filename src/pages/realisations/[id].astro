@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import { getCollection, render } from 'astro:content';
+import { competences } from '../../data/competences';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('realisations')).sort((a, b) => a.data.ordre - b.data.ordre);
+  return all.map((entry, i) => ({
+    params: { id: entry.id },
+    props: { entry, prev: all[i - 1] ?? null, next: all[i + 1] ?? null },
+  }));
+}
+const { entry, prev, next } = Astro.props;
+const d = entry.data;
+const id = entry.id.toUpperCase();
+const placeholder = d.statut === 'placeholder';
+const { Content } = await render(entry);
+const titreComp = (c: string) => competences.find(x => x.id === c)?.titre ?? c;
+const statutLabel = { placeholder: 'à venir', 'en-cours': 'en cours', termine: 'terminée' }[d.statut];
+---
+<Base title={`${id} — ${d.titre}`} description={d.resume}>
+  <section class="section">
+    <div class="fiche__nav">
+      <p class="crumb" style="margin:0"><a href="/realisations">Réalisations</a> › <b>{id} — {d.titre}</b></p>
+      <span style="display:flex;gap:var(--sp-2)">
+        {prev && <a class="btn btn--ghost" href={`/realisations/${prev.id}`} title={prev.data.titre}>← {prev.id.toUpperCase()}</a>}
+        {next && <a class="btn btn--ghost" href={`/realisations/${next.id}`} title={next.data.titre}>{next.id.toUpperCase()} →</a>}
+      </span>
+    </div>
+
+    <header class="fiche__head">
+      <p class="label">{id} · {d.contexte === 'pro' ? 'Réalisation professionnelle' : `Réalisation personnelle${d.precision ? ` (${d.precision})` : ''}`}</p>
+      <h1 style="font-family:var(--font-sans);font-size:var(--fs-h1);letter-spacing:-.01em">{d.titre}</h1>
+      <div class="fiche__meta">
+        {d.organisation && <span class="tag">{d.organisation}</span>}
+        <span>Période : <strong style="color:var(--fg)">{d.periode}</strong></span>
+        <span class:list={['state', placeholder ? 'state--todo' : 'state--ok']}>● {statutLabel}</span>
+      </div>
+      <div class="badges">
+        {d.competences.map(c => <a class="badge" href={`/competences#${c.toLowerCase()}`} title={titreComp(c)}>{c}</a>)}
+      </div>
+    </header>
+
+    {placeholder && (
+      <Placeholder titre="Réalisation à venir — aucun contenu inventé">
+        Cette fiche existe pour que le plan de l'année soit visible. Elle sera remplie uniquement lorsque la réalisation existera réellement.
+      </Placeholder>
+    )}
+
+    <div class="fiche__layout" style="margin-top:var(--sp-6)">
+      <article class="prose">
+        <Content />
+      </article>
+      <aside class="fiche__aside">
+        <div class="panel">
+          <p class="label">Environnement technique</p>
+          {d.technologies.length
+            ? <div class="tags">{d.technologies.map(t => <span class="tag">{t}</span>)}</div>
+            : <p class="todo">À préciser.</p>}
+        </div>
+        <div class="panel">
+          <p class="label">Compétences mobilisées</p>
+          <ul class="small" style="padding-left:1.1rem;margin:0">
+            {d.competences.map(c => <li><a href={`/competences#${c.toLowerCase()}`}><strong>{c}</strong></a> — {titreComp(c)}</li>)}
+          </ul>
+        </div>
+        <div class="panel">
+          <p class="label">Schéma d'architecture</p>
+          <div class="schema-slot">slot schéma · SVG à venir</div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>

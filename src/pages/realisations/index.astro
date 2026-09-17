@@ -1,0 +1,78 @@
+---
+import Base from '../../layouts/Base.astro';
+import CardRealisation from '../../components/CardRealisation.astro';
+import { getCollection } from 'astro:content';
+import { COMPETENCES } from '../../content.config';
+const realisations = (await getCollection('realisations')).sort((a, b) => a.data.ordre - b.data.ordre);
+---
+<Base title="Réalisations">
+  <section class="section">
+    <p class="label">Page 4</p>
+    <h1>Réalisations</h1>
+
+    <div class="panel" style="margin:var(--sp-6) 0" id="filtres">
+      <p class="label">Filtrer par compétence</p>
+      <div class="chips" role="group" aria-label="Compétence E5">
+        <button class="chip" type="button" data-filter="comp" data-value="" aria-pressed="true">Toutes</button>
+        {COMPETENCES.map(c => <button class="chip" type="button" data-filter="comp" data-value={c} aria-pressed="false">{c}</button>)}
+      </div>
+      <p class="label" style="margin-top:var(--sp-4)">Filtrer par contexte</p>
+      <div class="chips" role="group" aria-label="Contexte">
+        <button class="chip" type="button" data-filter="ctx" data-value="" aria-pressed="true">Tous</button>
+        <button class="chip" type="button" data-filter="ctx" data-value="pro" aria-pressed="false">Professionnel</button>
+        <button class="chip" type="button" data-filter="ctx" data-value="perso" aria-pressed="false">Personnel</button>
+      </div>
+      <p class="small" style="margin-top:var(--sp-3)" aria-live="polite"><span data-count>{realisations.length}</span> réalisation(s) affichée(s) · <a href="/realisations" data-reset>réinitialiser</a></p>
+    </div>
+
+    <div class="grid grid--3" id="liste">
+      {realisations.map(r => <CardRealisation entry={r} />)}
+    </div>
+    <p class="small" id="vide" hidden style="margin-top:var(--sp-4)">Aucune réalisation ne correspond à ces filtres.</p>
+  </section>
+
+  <script>
+    // Filtres cumulables. L'état vit dans l'URL (?comp=C2&ctx=pro) : partageable, bouton retour fonctionnel,
+    // et la page Compétences peut deep-linker directement.
+    const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const cards = [...document.querySelectorAll<HTMLElement>('#liste .card')];
+    const count = document.querySelector<HTMLElement>('[data-count]');
+    const vide = document.getElementById('vide');
+    const state = { comp: '', ctx: '' };
+
+    function apply(push = true) {
+      let n = 0;
+      for (const c of cards) {
+        const okComp = !state.comp || (c.dataset.comp ?? '').split(' ').includes(state.comp);
+        const okCtx = !state.ctx || c.dataset.ctx === state.ctx;
+        const show = okComp && okCtx;
+        c.hidden = !show; if (show) n++;
+      }
+      if (count) count.textContent = String(n);
+      if (vide) vide.hidden = n > 0;
+      for (const ch of chips) {
+        const k = ch.dataset.filter as 'comp' | 'ctx';
+        ch.setAttribute('aria-pressed', String(state[k] === (ch.dataset.value ?? '')));
+      }
+      if (push) {
+        const p = new URLSearchParams();
+        if (state.comp) p.set('comp', state.comp);
+        if (state.ctx) p.set('ctx', state.ctx);
+        const q = p.toString();
+        history.pushState(null, '', q ? `?${q}` : location.pathname);
+      }
+    }
+    function fromUrl() {
+      const p = new URLSearchParams(location.search);
+      state.comp = p.get('comp') ?? ''; state.ctx = p.get('ctx') ?? '';
+      apply(false);
+    }
+    for (const ch of chips) ch.addEventListener('click', () => {
+      const k = ch.dataset.filter as 'comp' | 'ctx';
+      state[k] = ch.dataset.value ?? ''; apply();
+    });
+    document.querySelector('[data-reset]')?.addEventListener('click', e => { e.preventDefault(); state.comp = ''; state.ctx = ''; apply(); });
+    window.addEventListener('popstate', fromUrl);
+    fromUrl();
+  </script>
+</Base>

@@ -1,21 +1,53 @@
 ---
-// Visualisation sobre de la méthode de veille : sources → agrégateur → fiches (brief §5, §7).
-const boxes = [
-  { x: 10,  w: 170, l1: 'SOURCES', l2: 'ANSSI · IT-Connect · …' },
-  { x: 300, w: 200, l1: 'FEEDLY', l2: 'dossier « Veille IT »', accent: true },
-  { x: 620, w: 170, l1: 'FICHES', l2: 'résumé + apport perso' },
-];
+// Flux d'informations (brief §5, §7) : 6 sources → Feedly (dossier « Veille IT ») → fiches d'analyse.
+// Les « articles » (particules) circulent le long des courbes ; Feedly pulse à chaque arrivée,
+// une fiche s'éclaire à chaque sortie. Animé par src/scripts/motion.ts (GSAP) ; statique sinon.
+const sources = ['ANSSI', 'IT-Connect', 'BleepingComputer', 'Next INpact', 'The Register', 'Ars Technica'];
+const fiches = ['Fiche 01', 'Fiche 02', 'Fiche 03'];
+const W = 800, H = 300;
+const srcX = 20, srcW = 150, srcH = 26, srcGap = 44, srcY0 = 30;
+const hubX = 315, hubY = 105, hubW = 170, hubH = 90;
+const ficheX = 615, ficheW = 170, ficheH = 44, ficheGap = 74, ficheY0 = 60;
+const sy = (i: number) => srcY0 + i * srcGap + srcH / 2;
+const fy = (i: number) => ficheY0 + i * ficheGap + ficheH / 2;
+const cy = hubY + hubH / 2;
+const pIn = (i: number) => `M${srcX + srcW} ${sy(i)} C ${srcX + srcW + 70} ${sy(i)}, ${hubX - 70} ${cy}, ${hubX} ${cy}`;
+const pOut = (i: number) => `M${hubX + hubW} ${cy} C ${hubX + hubW + 70} ${cy}, ${ficheX - 70} ${fy(i)}, ${ficheX} ${fy(i)}`;
 ---
-<svg class="flux" viewBox="0 0 800 70" role="img" aria-label="Méthode de veille : les sources alimentent Feedly, qui nourrit les fiches d'analyse">
-  <path class="line" d="M180 35 H300" /><path class="dash" d="M180 35 H300" />
-  <path class="line" d="M500 35 H620" /><path class="dash" d="M500 35 H620" />
-  <path d="M293 30 l7 5 -7 5" fill="none" stroke="var(--accent-text)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M613 30 l7 5 -7 5" fill="none" stroke="var(--accent-text)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-  {boxes.map(b => (
-    <g>
-      <rect class:list={['box', { 'box--accent': b.accent }]} x={b.x} y="12" width={b.w} height="46" rx="8" />
-      <text class="strong" x={b.x + b.w / 2} y="32" text-anchor="middle">{b.l1}</text>
-      <text x={b.x + b.w / 2} y="48" text-anchor="middle">{b.l2}</text>
+<svg class="flux" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Méthode de veille : six sources alimentent Feedly, qui nourrit les fiches d'analyse personnelles">
+  <defs>
+    <filter id="flux-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <!-- courbes -->
+  {sources.map((_, i) => <path class="p-in" d={pIn(i)} />)}
+  {fiches.map((_, i) => <path class="p-out" d={pOut(i)} />)}
+  <!-- sources -->
+  {sources.map((s, i) => (
+    <g class="src">
+      <rect x={srcX} y={srcY0 + i * srcGap} width={srcW} height={srcH} rx="13" />
+      <circle cx={srcX + 14} cy={sy(i)} r="3" class="src-dot" />
+      <text x={srcX + 26} y={sy(i) + 4}>{s}</text>
     </g>
   ))}
+  <!-- hub Feedly -->
+  <g class="hub">
+    <rect class="hub-ring" x={hubX} y={hubY} width={hubW} height={hubH} rx="12" />
+    <rect class="hub-box" x={hubX} y={hubY} width={hubW} height={hubH} rx="12" />
+    <text class="strong" x={hubX + hubW / 2} y={hubY + 36} text-anchor="middle">FEEDLY</text>
+    <text x={hubX + hubW / 2} y={hubY + 56} text-anchor="middle">dossier « Veille IT »</text>
+    <text class="tiny" x={hubX + hubW / 2} y={hubY + 74} text-anchor="middle">tri · lecture · sélection</text>
+  </g>
+  <!-- fiches -->
+  {fiches.map((f, i) => (
+    <g class="fiche-g">
+      <rect class="fiche" x={ficheX} y={ficheY0 + i * ficheGap} width={ficheW} height={ficheH} rx="8" stroke-opacity="0.25" />
+      <text class="strong" x={ficheX + 14} y={fy(i) - 3}>{f}</text>
+      <text class="tiny" x={ficheX + 14} y={fy(i) + 12}>résumé + apport personnel</text>
+    </g>
+  ))}
+  <g class="particles" filter="url(#flux-glow)"></g>
+  <!-- légende -->
+  <text class="tiny" x={srcX} y={H - 8}>SOURCES</text>
+  <text class="tiny" x={hubX + hubW / 2} y={H - 8} text-anchor="middle">AGRÉGATION</text>
+  <text class="tiny" x={ficheX} y={H - 8}>ANALYSE PERSONNELLE</text>
 </svg>

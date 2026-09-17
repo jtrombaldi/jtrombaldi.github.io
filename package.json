@@ -12,6 +12,7 @@
   "dependencies": {
     "@fontsource/ibm-plex-sans": "^5.2.5",
     "@fontsource/jetbrains-mono": "^5.2.5",
-    "astro": "^5.13.0"
+    "astro": "^5.13.0",
+    "gsap": "^3.15.0"
   }
 }

@@ -21,7 +21,7 @@ const nbCouvertes = competences.filter(c => couverte(c.id)).length;
           </span>
         ))}
       </div>
-      <span class="small">{nbCouvertes}/6 compétences couvertes{nbCouvertes < 6 ? ' — les autres sont en construction' : ''}</span>
+      <span class="small"><span data-count-to={nbCouvertes}>{nbCouvertes}</span>/6 compétences couvertes{nbCouvertes < 6 ? ' — les autres sont en construction' : ''}</span>
     </div>
 
     <div class="grid grid--3">

@@ -47,31 +47,11 @@ const fullTitle = `${title} · ${candidat.prenom} ${candidat.nom}`;
       </div>
     </footer>
     <script>
-      // Apparition au défilement : fondu + 12 px (preset « Scroll Reveal (Subtle) » d'UI UX Pro Max).
-      const revealables = document.querySelectorAll<HTMLElement>('[data-reveal]');
-      if ('IntersectionObserver' in window && revealables.length) {
-        const io = new IntersectionObserver((entries) => {
-          for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
-        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
-        revealables.forEach(el => io.observe(el));
-      } else {
-        revealables.forEach(el => el.classList.add('is-in'));
-      }
-      document.documentElement.classList.add('reveal-ready');
-
+      import '../scripts/motion.ts';
+      // Interrupteur : état du bouton (le rechargement est géré dans motion.ts)
       const btn = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
-      const root = document.documentElement;
-      const sync = () => {
-        const off = root.dataset.motion === 'off';
-        if (btn) { btn.textContent = `animations : ${off ? 'off' : 'on'}`; btn.setAttribute('aria-pressed', String(off)); }
-      };
-      btn?.addEventListener('click', () => {
-        const off = root.dataset.motion === 'off';
-        if (off) { delete root.dataset.motion; } else { root.dataset.motion = 'off'; }
-        try { localStorage.setItem('motion', off ? 'on' : 'off'); } catch (e) {}
-        sync();
-      });
-      sync();
+      const off = document.documentElement.dataset.motion === 'off';
+      if (btn) { btn.textContent = `animations : ${off ? 'off' : 'on'}`; btn.setAttribute('aria-pressed', String(off)); }
     </script>
   </body>
 </html>

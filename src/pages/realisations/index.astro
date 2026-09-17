@@ -26,7 +26,7 @@ const realisations = (await getCollection('realisations')).sort((a, b) => a.data
     </div>
 
     <div class="grid grid--3" id="liste">
-      {realisations.map(r => <CardRealisation entry={r} />)}
+      {realisations.map((r, i) => <CardRealisation entry={r} index={i} />)}
     </div>
     <p class="small" id="vide" hidden style="margin-top:var(--sp-4)">Aucune réalisation ne correspond à ces filtres.</p>
   </section>

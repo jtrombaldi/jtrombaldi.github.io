@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-interface Props { entry: CollectionEntry<'realisations'>; }
-const { entry } = Astro.props;
+interface Props { entry: CollectionEntry<'realisations'>; index?: number; }
+const { entry, index = 0 } = Astro.props;
 const d = entry.data;
 const id = entry.id.toUpperCase();
 const placeholder = d.statut === 'placeholder';
@@ -12,6 +12,8 @@ const placeholder = d.statut === 'placeholder';
   data-comp={d.competences.join(' ')}
   data-ctx={d.contexte}
   data-statut={d.statut}
+  data-reveal
+  style={`--i:${index % 3}`}
 >
   <div class="card__top">
     <span class="card__id">{id}</span>

@@ -1,0 +1,27 @@
+---
+// Micro-icône par compétence (brief §3). Une par domaine, animée sobrement en CSS (motion.css).
+interface Props { id: 'C1' | 'C2' | 'C3' | 'C4' | 'C5' | 'C6'; }
+const { id } = Astro.props;
+const cls = `cicon cicon--${id.toLowerCase()}`;
+const common = { fill: 'none', stroke: 'currentColor', 'stroke-width': 1.75, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false', viewBox: '0 0 24 24' };
+---
+{id === 'C1' && (
+  <svg class={cls} {...common}><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/>
+    <g fill="currentColor" stroke="none"><circle class="led" cx="7" cy="7.5" r="1"/><circle class="led" cx="7" cy="16.5" r="1"/><circle class="led" cx="10.5" cy="7.5" r="1"/></g></svg>
+)}
+{id === 'C2' && (
+  <svg class={cls} {...common}><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.1-2.1 2.5-2.3z"/></svg>
+)}
+{id === 'C3' && (
+  <svg class={cls} {...common}><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><ellipse class="meridian" cx="12" cy="12" rx="4" ry="9"/></svg>
+)}
+{id === 'C4' && (
+  <svg class={cls} {...common}><path d="M4 5h16"/><path class="bar" d="M4 10h12"/><path class="bar" d="M4 14h8"/><path class="bar" d="M4 18h14"/></svg>
+)}
+{id === 'C5' && (
+  <svg class={cls} {...common}><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><g class="arrow"><path d="M12 15V4"/><path d="M7.5 8.5 12 4l4.5 4.5"/></g></svg>
+)}
+{id === 'C6' && (
+  <svg class={cls} {...common}><circle cx="5" cy="19" r="1.2" fill="currentColor" stroke="none"/>
+    <path class="wave" d="M4 11a9 9 0 0 1 9 9"/><path class="wave" d="M4 6.5A13.5 13.5 0 0 1 17.5 20"/><path class="wave" d="M4 2a18 18 0 0 1 18 18"/></svg>
+)}

@@ -26,6 +26,10 @@ const fullTitle = `${title} · ${candidat.prenom} ${candidat.nom}`;
     <!-- Interrupteur d'animations : appliqué avant le rendu pour éviter tout flash -->
     <script is:inline>
       try { if (localStorage.getItem('motion') === 'off') document.documentElement.dataset.motion = 'off'; } catch (e) {}
+      // Signale la présence du JS (l'état « caché » du reveal ne s'applique qu'avec html.js),
+      // et garantit l'affichage si le module de reveal n'a pas tourné après 1,2 s.
+      document.documentElement.classList.add('js');
+      setTimeout(() => { if (!document.documentElement.classList.contains('reveal-ready')) document.documentElement.classList.add('reveal-fallback'); }, 1200);
     </script>
   </head>
   <body>
@@ -43,6 +47,18 @@ const fullTitle = `${title} · ${candidat.prenom} ${candidat.nom}`;
       </div>
     </footer>
     <script>
+      // Apparition au défilement : fondu + 12 px (preset « Scroll Reveal (Subtle) » d'UI UX Pro Max).
+      const revealables = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if ('IntersectionObserver' in window && revealables.length) {
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+        revealables.forEach(el => io.observe(el));
+      } else {
+        revealables.forEach(el => el.classList.add('is-in'));
+      }
+      document.documentElement.classList.add('reveal-ready');
+
       const btn = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
       const root = document.documentElement;
       const sync = () => {

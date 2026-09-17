@@ -1,0 +1,103 @@
+/* ============================================================
+   MOUVEMENT — couche optionnelle (doc/DESIGN_SYSTEM.md §05)
+   Uniquement opacity / transform / stroke. Jamais width/height.
+   Tout est coupé par html[data-motion="off"] et prefers-reduced-motion.
+   ============================================================ */
+
+/* ---------- interrupteur global : rien ne bouge ---------- */
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after {
+  animation: none !important; transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- 1. fondu entre les pages (cross-document view transitions) ---------- */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out var(--dur-base) var(--ease) both; }
+::view-transition-new(root) { animation: vt-in var(--dur-base) var(--ease) both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+/* la nav reste fixe pendant la transition */
+.nav { view-transition-name: nav; }
+::view-transition-old(nav), ::view-transition-new(nav) { animation: none; }
+
+/* ---------- 2. apparition au défilement ---------- */
+/* L'état caché n'est appliqué que si le JS est là (html.js) : sans JS, tout est visible d'emblée. */
+html.js [data-reveal] {
+  opacity: 0; transform: translateY(12px);
+  transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+html.js [data-reveal].is-in, html.js.reveal-fallback [data-reveal] { opacity: 1; transform: none; }
+html[data-motion="off"] [data-reveal] { opacity: 1 !important; transform: none !important; }
+@media (prefers-reduced-motion: reduce) { html.js [data-reveal] { opacity: 1; transform: none; } }
+
+/* ---------- 3. fond du hero : réseau ---------- */
+.hero > .hero__net { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; } /* > : gagne sur .hero > * {position:relative} */
+.hero__net .edge { stroke: var(--border); stroke-width: 1; }
+.hero__net .node { fill: var(--accent-text); opacity: .55; transform-box: fill-box; transform-origin: center;
+  animation: node-pulse 4s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -.7s); }
+.hero__net .node--core { opacity: .9; }
+.hero__net .pkt { fill: var(--accent-text); opacity: 0;
+  offset-rotate: 0deg; animation: pkt-travel var(--pkt-dur, 5s) linear infinite; animation-delay: var(--pkt-delay, 0s); }
+@keyframes node-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
+@keyframes pkt-travel {
+  0% { offset-distance: 0%; opacity: 0; }
+  8% { opacity: .9; }
+  92% { opacity: .9; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@supports not (offset-path: path("M0 0")) { .hero__net .pkt { display: none; } }
+
+/* ---------- 4. micro-icônes des compétences ---------- */
+.cicon { width: 28px; height: 28px; color: var(--accent-text); flex: 0 0 auto; }
+.cicon * { transform-box: fill-box; transform-origin: center; }
+/* C1 patrimoine : LEDs qui clignotent */
+.cicon--c1 .led { animation: led 2.4s steps(1) infinite; }
+.cicon--c1 .led:nth-child(2) { animation-delay: .8s; }
+.cicon--c1 .led:nth-child(3) { animation-delay: 1.6s; }
+@keyframes led { 0%, 60% { opacity: 1; } 61%, 100% { opacity: .25; } }
+/* C2 incidents : clé qui s'oriente au survol */
+.cicon--c2 { transition: transform var(--dur-base) var(--ease); }
+.card:hover .cicon--c2 { transform: rotate(-20deg); }
+/* C3 présence en ligne : méridien qui tourne lentement */
+.cicon--c3 .meridian { animation: meridian 6s ease-in-out infinite; }
+@keyframes meridian { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(.15); } }
+/* C4 mode projet : barres qui progressent */
+.cicon--c4 .bar { transform-origin: left center; animation: bar 3.6s var(--ease) infinite; }
+.cicon--c4 .bar:nth-child(2) { animation-delay: .4s; }
+.cicon--c4 .bar:nth-child(3) { animation-delay: .8s; }
+@keyframes bar { 0% { transform: scaleX(.35); } 45%, 70% { transform: scaleX(1); } 100% { transform: scaleX(.35); } }
+/* C5 mise à disposition : flèche qui s'élève au survol, respiration au repos */
+.cicon--c5 .arrow { animation: lift 3s ease-in-out infinite; }
+@keyframes lift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+.card:hover .cicon--c5 .arrow { animation: lift 1s ease-in-out infinite; }
+/* C6 développement pro : ondes RSS qui pulsent en séquence */
+.cicon--c6 .wave { animation: wave 2.4s ease-in-out infinite; opacity: .35; }
+.cicon--c6 .wave:nth-child(2) { animation-delay: .4s; }
+.cicon--c6 .wave:nth-child(3) { animation-delay: .8s; }
+@keyframes wave { 0%, 100% { opacity: .35; } 30% { opacity: 1; } }
+
+/* ---------- 5. flux d'informations (Veille) ---------- */
+.flux { display: block; width: 100%; height: auto; margin: var(--sp-4) 0 var(--sp-2); }
+.flux .line { stroke: var(--border); stroke-width: 1.5; }
+.flux .dash { stroke: var(--accent-text); stroke-width: 1.5; stroke-dasharray: 6 10; stroke-linecap: round;
+  animation: dash 1.6s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: -16; } }
+.flux .box { fill: var(--card); stroke: var(--border); }
+.flux .box--accent { stroke: var(--accent); }
+.flux text { font-family: var(--font-mono); font-size: 11px; fill: var(--muted-fg); letter-spacing: .06em; }
+.flux text.strong { fill: var(--fg); font-weight: 600; }
+
+/* ---------- 6. polish des interactions ---------- */
+.chip:active, .btn:active { transform: scale(.97); }
+.nav__link { position: relative; }
+.nav__link::after {
+  content: ""; position: absolute; left: var(--sp-3); right: var(--sp-3); bottom: 6px; height: 2px;
+  background: var(--accent-text); border-radius: 2px; transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-base) var(--ease);
+}
+.nav__link:hover::after, .nav__link[aria-current="page"]::after { transform: scaleX(1); }
+a.card:hover .card__id { color: var(--fg); transition: color var(--dur-fast) var(--ease); }

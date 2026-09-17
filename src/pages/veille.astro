@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Placeholder from '../components/Placeholder.astro';
 import { getCollection, render } from 'astro:content';
+import VeilleFlux from '../components/VeilleFlux.astro';
 const fiches = (await getCollection('veille')).sort((a, b) => a.data.ordre - b.data.ordre);
 const rendered = await Promise.all(fiches.map(async f => ({ f, Content: (await render(f)).Content })));
 const sources = ['ANSSI', 'IT-Connect', 'BleepingComputer', 'Next INpact', 'The Register', 'Ars Technica'];
@@ -11,16 +12,17 @@ const themes = ['Cybersécurité', 'Infrastructure Linux', 'Réseau', 'Failles C
   <section class="section">
     <p class="label">Page 5 · compétence C6</p>
     <h1>Veille technologique</h1>
-    <div class="grid grid--3" style="margin-top:var(--sp-6)">
-      <div class="panel">
+    <VeilleFlux />
+    <div class="grid grid--3">
+      <div class="panel" data-reveal style="--i:0">
         <p class="label">Méthode</p>
         <p class="small">Agrégateur <strong style="color:var(--fg)">Feedly</strong> avec un compte dédié (conservé après la formation), dossier « Veille IT », flux RSS. Fréquence et organisation : <span class="todo">à préciser</span>.</p>
       </div>
-      <div class="panel">
+      <div class="panel" data-reveal style="--i:1">
         <p class="label">Sources configurées</p>
         <div class="tags">{sources.map(s => <span class="tag">{s}</span>)}</div>
       </div>
-      <div class="panel">
+      <div class="panel" data-reveal style="--i:2">
         <p class="label">Thèmes surveillés</p>
         <div class="tags">{themes.map(t => <span class="tag">{t}</span>)}</div>
       </div>

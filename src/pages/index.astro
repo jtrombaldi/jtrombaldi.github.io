@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { candidat as c } from '../data/candidat';
 import { getCollection } from 'astro:content';
+import HeroNetwork from '../components/HeroNetwork.astro';
 const realisations = await getCollection('realisations');
 const nb = realisations.filter(r => r.data.statut !== 'placeholder').length;
 ---
@@ -9,6 +10,7 @@ const nb = realisations.filter(r => r.data.statut !== 'placeholder').length;
   <section class="section">
     <div class="hero">
       <div class="hero__bg" aria-hidden="true"></div>
+      <HeroNetwork />
       <p class="label">{c.formation} · {c.anneeScolaire}</p>
       <h1>{c.prenom} {c.nom}</h1>
       <p><strong style="color:var(--fg)">{c.etablissement}</strong> · Alternance chez <strong style="color:var(--fg)">{c.entreprise}</strong> — {c.entrepriseDetail.toLowerCase()}</p>
@@ -23,17 +25,17 @@ const nb = realisations.filter(r => r.data.statut !== 'placeholder').length;
   <section class="section">
     <p class="label">Navigation</p>
     <div class="grid grid--3">
-      <a class="card" href="/realisations">
+      <a class="card" href="/realisations" data-reveal style="--i:0">
         <span class="card__id">04</span>
         <h3>Réalisations</h3>
         <p>{nb} réalisations documentées, filtrables par compétence E5 et par contexte.</p>
       </a>
-      <a class="card" href="/competences">
+      <a class="card" href="/competences" data-reveal style="--i:1">
         <span class="card__id">03</span>
         <h3>Compétences E5</h3>
         <p>Les 6 compétences du bloc, avec les réalisations qui les démontrent.</p>
       </a>
-      <a class="card" href="/veille">
+      <a class="card" href="/veille" data-reveal style="--i:2">
         <span class="card__id">05</span>
         <h3>Veille technologique</h3>
         <p>Méthode, sources et fiches d'analyse personnelle.</p>

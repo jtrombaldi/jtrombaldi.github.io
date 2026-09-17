@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import { competences } from '../data/competences';
+import CompetenceIcon from '../components/CompetenceIcon.astro';
 const realisations = (await getCollection('realisations')).sort((a, b) => a.data.ordre - b.data.ordre);
 const couvrent = (id: string) => realisations.filter(r => r.data.competences.includes(id as any));
 const couverte = (id: string) => couvrent(id).some(r => r.data.statut !== 'placeholder');
@@ -24,13 +25,13 @@ const nbCouvertes = competences.filter(c => couverte(c.id)).length;
     </div>
 
     <div class="grid grid--3">
-      {competences.map(c => {
+      {competences.map((c, i) => {
         const rs = couvrent(c.id);
         const ok = couverte(c.id);
         return (
-          <article class:list={['card', { 'card--placeholder': !ok }]} id={c.id.toLowerCase()}>
+          <article class:list={['card', { 'card--placeholder': !ok }]} id={c.id.toLowerCase()} data-reveal style={`--i:${i}`}>
             <div class="card__top">
-              <span class="card__id">{c.id}</span>
+              <span style="display:flex;align-items:center;gap:var(--sp-2)"><CompetenceIcon id={c.id} /><span class="card__id">{c.id}</span></span>
               <span class:list={['state', ok ? 'state--ok' : 'state--todo']}>{ok ? '✓ couverte' : '⧗ à construire'}</span>
             </div>
             <h3>{c.titre}</h3>

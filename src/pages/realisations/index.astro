@@ -25,7 +25,7 @@ const realisations = (await getCollection('realisations')).sort((a, b) => a.data
       <p class="small" style="margin-top:var(--sp-3)" aria-live="polite"><span data-count>{realisations.length}</span> réalisation(s) affichée(s) · <a href="/realisations" data-reset>réinitialiser</a></p>
     </div>
 
-    <div class="grid grid--3" id="liste">
+    <div class="grid grid--3" id="liste" style="position:relative">
       {realisations.map((r, i) => <CardRealisation entry={r} index={i} />)}
     </div>
     <p class="small" id="vide" hidden style="margin-top:var(--sp-4)">Aucune réalisation ne correspond à ces filtres.</p>
@@ -60,7 +60,9 @@ const realisations = (await getCollection('realisations')).sort((a, b) => a.data
         const shown = cards.filter(c => !c.classList.contains('is-hidden'));
         gsap.killTweensOf(shown); gsap.set(shown, { autoAlpha: 1, y: 0 });
         Flip.from(before, {
-          duration: 0.55, ease: 'power2.inOut', stagger: 0.03, absolute: true, nested: true,
+          // absoluteOnLeave : seules les cartes sortantes passent en absolu ; les autres restent dans le flux
+          // (sinon la grille s'effondre à 0 px pendant l'animation et tout saute à la fin)
+          duration: 0.55, ease: 'power2.inOut', stagger: 0.03, absoluteOnLeave: true, nested: true,
           onEnter: (els) => gsap.fromTo(els, { autoAlpha: 0, scale: 0.92, y: 0 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'power2.out', stagger: 0.04 }),
           onLeave: (els) => gsap.to(els, { autoAlpha: 0, scale: 0.92, duration: 0.3, ease: 'power2.in' }),
         });

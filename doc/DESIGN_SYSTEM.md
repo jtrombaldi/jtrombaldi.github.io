@@ -1,7 +1,7 @@
 # DESIGN_SYSTEM.md — Portfolio E5
 *Verrouillé le 17 septembre 2026 — Étape 3 de la conception. Complète PROJECT_BRIEF.md (qui reste la source de vérité fonctionnelle).*
 
-Aperçu rendu : `prototype/conception/design-system.html` (servi sur http://localhost:8765 via `.claude/launch.json` → config `conception`).
+Aperçu rendu : `doc/conception/design-system.html` (servi sur http://localhost:8765 via `.claude/launch.json` → config `conception`).
 
 ## Direction retenue
 **Hybride** = palette « Signal bleu » (B2) + typographie « Developer Mono » (B1).

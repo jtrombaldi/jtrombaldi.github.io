@@ -42,7 +42,7 @@ Slots réservés et tokens de mouvement déjà dans le design system. Interrupte
 ```
 portfolio/
 ├── doc/                     brief, design system, stack, journal R8
-├── prototype/conception/    livrables des étapes 1-3
+├── doc/conception/    livrables des étapes 1-3
 ├── src/
 │   ├── content/
 │   │   ├── realisations/    r1.md … r8.md   (statut: placeholder | en-cours | termine)

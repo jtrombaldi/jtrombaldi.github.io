@@ -12,6 +12,11 @@ html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
+/* ---------- 0. fond global (canvas piloté par motion.ts ; invisible sans GSAP) ---------- */
+.bg-net { position: fixed; inset: 0; z-index: -1; pointer-events: none; display: none; }
+html.gsap .bg-net { display: block; }
+.hero { background: color-mix(in srgb, var(--card) 92%, transparent); } /* laisse deviner le réseau derrière le hero */
+
 /* ---------- 1. fondu entre les pages (cross-document view transitions) ---------- */
 @view-transition { navigation: auto; }
 ::view-transition-old(root) { animation: vt-out var(--dur-base) var(--ease) both; }
@@ -65,6 +70,8 @@ html[data-motion="off"] [data-reveal] { opacity: 1 !important; transform: none !
 .cicon { width: 28px; height: 28px; color: var(--accent-text); flex: 0 0 auto; overflow: visible; }
 .cicon * { transform-box: fill-box; transform-origin: center; }
 .cicon .led { opacity: 1; }
+.cicon--c3 .orbit { stroke: currentColor; }
+.cicon--c3 .ping { stroke: currentColor; stroke-width: 1.2; }
 
 /* ---------- 5. flux d'informations (Veille) ---------- */
 .flux { display: block; width: 100%; height: auto; margin: var(--sp-4) 0 var(--sp-2); }

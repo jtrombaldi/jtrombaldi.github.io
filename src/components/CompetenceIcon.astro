@@ -13,10 +13,17 @@ const common = { fill: 'none', stroke: 'currentColor', 'stroke-width': 1.75, 'st
   <svg class={cls} {...common}><path pathLength="1" d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.1-2.1 2.5-2.3z"/></svg>
 )}
 {id === 'C3' && (
-  <svg class={cls} {...common} viewBox="-2 -2 28 28"><circle pathLength="1" cx="12" cy="12" r="7.5"/><path pathLength="1" d="M4.5 12h15"/><ellipse pathLength="1" cx="12" cy="12" rx="3" ry="7.5"/>
-    <path class="orbit" d="M0 12 a12 4.5 0 1 0 24 0 a12 4.5 0 1 0 -24 0" fill="none" stroke-width="1" stroke-dasharray="1.5 2.5" stroke-opacity=".45"/>
-    <circle class="sat" r="1.7" cx="0" cy="12" fill="currentColor" stroke="none"/>
-    <circle class="ping" cx="12" cy="12" r="7.5" fill="none" opacity="0"/></svg>
+  <svg class={cls} {...common} viewBox="-2 -2 28 28">
+    <!-- plan arrière : orbite complète + satellite (caché par le globe opaque quand il passe derrière) -->
+    <path class="orbit orbit--back" d="M0 12 a12 4.5 0 1 0 24 0 a12 4.5 0 1 0 -24 0" fill="none" stroke-width="1" stroke-dasharray="1.5 2.5" stroke-opacity=".35"/>
+    <circle class="sat sat--back" r="1.7" cx="0" cy="12" fill="currentColor" stroke="none"/>
+    <!-- globe opaque -->
+    <circle pathLength="1" cx="12" cy="12" r="7.5" fill="var(--card)"/><path pathLength="1" d="M4.5 12h15"/><ellipse pathLength="1" cx="12" cy="12" rx="3" ry="7.5"/>
+    <!-- plan avant : demi-orbite basse + satellite -->
+    <path class="orbit orbit--front" d="M0 12 a12 4.5 0 0 0 24 0" fill="none" stroke-width="1" stroke-dasharray="1.5 2.5" stroke-opacity=".6"/>
+    <circle class="sat sat--front" r="1.7" cx="0" cy="12" fill="currentColor" stroke="none"/>
+    <circle class="ping" cx="12" cy="12" r="7.5" fill="none" opacity="0"/>
+  </svg>
 )}
 {id === 'C4' && (
   <svg class={cls} {...common}><path pathLength="1" d="M4 5h16"/><path pathLength="1" class="bar" d="M4 10h12"/><path pathLength="1" class="bar" d="M4 14h8"/><path pathLength="1" class="bar" d="M4 18h14"/></svg>

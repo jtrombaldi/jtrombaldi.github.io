@@ -159,8 +159,12 @@ if (!off) {
     } else if (svg.classList.contains('cicon--c2')) {    // clé : oscillation lente
       tl.to(svg, { rotation: -12, duration: 1.3, ease: 'sine.inOut', yoyo: true, repeat: 1, transformOrigin: '50% 50%' });
     } else if (svg.classList.contains('cicon--c3')) {    // présence en ligne : un satellite orbite en continu
-      const orbit = svg.querySelector<SVGPathElement>('.orbit')!;
-      tl.to(q('.sat'), { motionPath: { path: orbit, align: orbit, alignOrigin: [0.5, 0.5] }, duration: 4.5, ease: 'none' });
+      // Deux satellites suivent la même orbite : celui du plan avant est visible sur la moitié basse
+      // (devant le globe), celui du plan arrière sur la moitié haute (derrière le globe opaque).
+      const orbit = svg.querySelector<SVGPathElement>('.orbit--back')!;
+      const front = svg.querySelector<SVGElement>('.sat--front')!, back = svg.querySelector<SVGElement>('.sat--back')!;
+      tl.to([front, back], { motionPath: { path: orbit, align: orbit, alignOrigin: [0.5, 0.5] }, duration: 4.5, ease: 'none',
+        onUpdate: () => { const below = Number(gsap.getProperty(front, 'y')) > 0; front.style.opacity = below ? '1' : '0'; back.style.opacity = below ? '0' : '1'; } });
     } else if (svg.classList.contains('cicon--c4')) {    // liste : barres qui progressent
       q('.bar').forEach((b, i) => tl.fromTo(b, { scaleX: 0.3, transformOrigin: 'left center' }, { scaleX: 1, duration: 0.9, ease: 'power2.out' }, i * 0.25));
       tl.to({}, { duration: 1.2 }).to(q('.bar'), { scaleX: 0.3, duration: 0.5, ease: 'power2.in', stagger: 0.1 });
